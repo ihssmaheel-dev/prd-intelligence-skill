@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{REPORT_TITLE}} — PRD Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F7F6F2;
+  --surface: #FFFFFF;
+  --surface2: #F2F0EB;
+  --border: #E4E0D8;
+  --border-mid: #CBC8BF;
+  --ink: #1A1916;
+  --ink2: #5C5A56;
+  --ink3: #9E9C97;
+  --blue: #1D4ED8;
+  --blue-light: #EEF2FF;
+  --blue-mid: #BFCAF5;
+  --green: #15803D;
+  --green-light: #F0FDF4;
+  --green-mid: #BBF7D0;
+  --amber: #B45309;
+  --amber-light: #FFFBEB;
+  --amber-mid: #FDE68A;
+  --rose: #BE123C;
+  --rose-light: #FFF1F2;
+  --rose-mid: #FECDD3;
+  --violet: #6D28D9;
+  --violet-light: #F5F3FF;
+  --dot-color: #CBC8BF;
+  --dot-opacity: 0.45;
+  --chart-grid: rgba(0,0,0,0.06);
+  --chart-donut-bg: #EAE8E2;
+  --chart-point-bg: #fff;
+  --swot-s: #F0FDF4;
+  --swot-sb: #BBF7D0;
+  --swot-o: #EEF2FF;
+  --swot-ob: #BFCAF5;
+}
+
+.dark-mode {
+  --bg: #131313;
+  --surface: #1E1E1E;
+  --surface2: #292929;
+  --border: #333333;
+  --border-mid: #4A4A4A;
+  --ink: #E8E8E6;
+  --ink2: #9E9C97;
+  --ink3: #6B6A66;
+  --blue-light: rgba(59,130,246,0.12);
+  --blue-mid: rgba(59,130,246,0.28);
+  --green-light: rgba(34,197,94,0.12);
+  --green-mid: rgba(34,197,94,0.24);
+  --amber-light: rgba(245,158,11,0.12);
+  --amber-mid: rgba(245,158,11,0.24);
+  --rose-light: rgba(244,63,94,0.12);
+  --rose-mid: rgba(244,63,94,0.24);
+  --violet-light: rgba(139,92,246,0.12);
+  --dot-color: #444;
+  --dot-opacity: 0.25;
+  --chart-grid: rgba(255,255,255,0.07);
+  --chart-donut-bg: #2A2A2A;
+  --chart-point-bg: #3A3A3A;
+  --swot-s: rgba(34,197,94,0.08);
+  --swot-sb: rgba(34,197,94,0.2);
+  --swot-o: rgba(59,130,246,0.08);
+  --swot-ob: rgba(59,130,246,0.2);
+}
+
+html { scroll-behavior: smooth; }
+html.dark-mode, html.dark-mode * { transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: var(--dot-opacity);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
+
+/* === BENTO GRID === */
+.bento {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-top: 8px;
+}
+.bento > .card { margin-bottom: 0; }
+
+/* Column spans */
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-6  { grid-column: span 6; }
+.col-5  { grid-column: span 5; }
+
+/* Row spans for taller cards */
+.row-2  { grid-row: span 2; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .bento { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6 {
+    grid-column: span 2;
+  }
+}
+@media (max-width: 500px) {
+  .bento { grid-template-columns: 1fr; gap: 10px; }
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6 {
+    grid-column: span 1;
+  }
+  .page { padding: 0 12px 40px; }
+}
+
+/* === CARDS === */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  overflow: hidden;
+}
+.card:hover { border-color: var(--border-mid); box-shadow: 0 4px 24px rgba(26,25,22,0.06); transform: translateY(-1px); }
+.dark-mode .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+.label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  font-family: 'DM Sans', sans-serif;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* === UTILITIES === */
+.card-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-body { padding: 18px; }
+
+.icon-box {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.rule { height: 1px; background: var(--border); margin: 14px 0; }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--ink2);
+  transition: all 0.2s;
+}
+.tag:hover { border-color: var(--border-mid); color: var(--ink); }
+
+.stat-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.stat-box .stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  display: block;
+  margin-top: 1px;
+}
+
+/* Progress bar */
+.prog-track {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--surface2);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.prog-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* Timeline dot */
+.tl-dot {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--blue-light);
+  border: 1.5px solid var(--blue-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+
+/* Table row */
+.trow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  gap: 10px;
+}
+
+/* Vertical accent bar */
+.accent-l { border-left: 3px solid var(--blue); padding-left: 14px; }
+
+/* Threat / Risk badges */
+.badge-hi  { background: var(--rose-light); color: var(--rose); border: 1px solid var(--rose-mid); }
+.badge-med { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-mid); }
+.badge-lo  { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+
+/* SWOT cells */
+.swot-cell { border-radius: 10px; padding: 14px; border: 1px solid; }
+.swot-s { background: var(--swot-s); border-color: var(--swot-sb); }
+.swot-w { background: var(--rose-light); border-color: var(--rose-mid); }
+.swot-o { background: var(--swot-o); border-color: var(--swot-ob); }
+.swot-t { background: var(--amber-light); border-color: var(--amber-mid); }
+
+/* Persona */
+.persona-card {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 14px;
+  background: var(--surface2);
+}
+.persona-card:hover { border-color: var(--blue-mid); background: var(--blue-light); }
+.avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+  flex-shrink: 0;
+}
+.av-b  { background:#EEF2FF; color:var(--blue); }
+.av-g  { background:var(--green-light); color:var(--green); }
+.av-a  { background:var(--amber-light); color:var(--amber); }
+.av-r  { background:var(--rose-light); color:var(--rose); }
+.av-v  { background:var(--violet-light); color:var(--violet); }
+
+/* Strength badge */
+.b-s { background:var(--green-light); color:var(--green); border:1px solid var(--green-mid); }
+.b-m { background:var(--amber-light); color:var(--amber); border:1px solid var(--amber-mid); }
+.b-w { background:var(--surface2); color:var(--ink3); border:1px solid var(--border); }
+
+/* Priority */
+.p-core  { color: var(--green); font-size:10px; font-weight:600; }
+.p-nice  { color: var(--amber); font-size:10px; font-weight:600; }
+.p-fut   { color: var(--ink3); font-size:10px; font-weight:600; }
+
+/* Score colors */
+.sc-great { color: #15803D; }
+.sc-good  { color: #B45309; }
+.sc-warn  { color: #C2410C; }
+.sc-low   { color: #DC2626; }
+
+/* Verdict badge */
+.v-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  border: 1.5px solid;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Heatmap tile */
+.htile {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 4px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  cursor: default; transition: all 0.2s;
+}
+.htile:hover { background: var(--blue-light); border-color: var(--blue-mid); transform: translateY(-1px); }
+
+/* Chart container */
+.chart-wrap { width:100%; height:220px; }
+.chart-wrap.tall { height:260px; }
+
+/* Score gauge ring */
+.score-ring { position:relative; width:140px; height:140px; }
+.score-ring canvas { width:140px; height:140px; }
+
+/* Animations */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes scaleIn { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
+.a-fu { animation: fadeUp 0.6s cubic-bezier(0.16,1,0.3,1) both; }
+.a-fi { animation: fadeIn 0.5s ease both; }
+.a-si { animation: scaleIn 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+.d1{animation-delay:.06s} .d2{animation-delay:.12s} .d3{animation-delay:.18s}
+.d4{animation-delay:.26s} .d5{animation-delay:.34s} .d6{animation-delay:.44s}
+
+/* Reveal on scroll */
+.reveal { opacity:0; transform:translateY(24px); transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* Page top bar */
+.top-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue) 0%, #7C3AED 50%, var(--blue) 100%);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<button id="darkToggle" style="position:fixed;top:12px;right:16px;z-index:200;width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:14px;" onclick="toggleDark()" aria-label="Toggle dark mode">
+  <i data-lucide="moon" id="darkIcon" style="width:16px;height:16px;"></i>
+</button>
+
+<div class="page">
+
+<!-- ===== HERO — full width ===== -->
+<header class="card col-6" style="text-align:center;padding:40px 20px 40px;border-radius:14px;" class="a-fu">
+  <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:999px;background:var(--blue-light);border:1px solid var(--blue-mid);margin-bottom:24px;" class="a-fi d1">
+    <i data-lucide="sparkles" style="width:12px;height:12px;color:var(--blue)"></i>
+    <span style="font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue);">PRD Intelligence Report</span>
+  </div>
+
+  <h1 style="font-family:'Syne',sans-serif;font-size:clamp(36px,6vw,64px);font-weight:800;color:var(--ink);letter-spacing:-0.03em;line-height:1.05;margin-bottom:12px;" class="a-si d2">{{REPORT_TITLE}}</h1>
+  <p style="font-size:15px;color:var(--ink2);max-width:480px;margin:0 auto 28px;line-height:1.6;" class="a-fi d3">{{REPORT_TAGLINE}}</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:36px;" class="a-fi d4">
+    <span class="tag"><i data-lucide="building-2" style="width:11px;height:11px"></i>{{REPORT_INDUSTRY}}</span>
+    <span class="tag"><i data-lucide="globe" style="width:11px;height:11px"></i>{{REPORT_GEOGRAPHY}}</span>
+    <span class="tag"><i data-lucide="calendar" style="width:11px;height:11px"></i>{{REPORT_DATE}}</span>
+    <span class="tag"><i data-lucide="layers" style="width:11px;height:11px"></i>{{REPORT_SUCCESSFUL}}/20 modules</span>
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:20px;" class="a-si d5">
+    <div class="score-ring">
+      <canvas id="heroScore" width="140" height="140"></canvas>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;color:var(--ink);line-height:1;">{{REPORT_SCORE}}</span>
+        <span style="font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);margin-top:1px;">Overall</span>
+      </div>
+    </div>
+    <div class="v-badge {{VERDICT_BG}}" style="color:{{VERDICT_TEXT_COLOR}};">
+      <i data-lucide="{{VERDICT_ICON}}" style="width:15px;height:15px"></i>{{REPORT_VERDICT}}
+    </div>
+  </div>
+</header>
+
+<!-- ===== BENTO GRID ===== -->
+<div class="bento">
+
+  <!-- BUILD DECISION — 6 cols -->
+  <div class="card col-6 reveal" style="border-left:4px solid;{{BUILD_BORDER_COLOR}}">
+    <div style="padding:16px 20px;display:flex;align-items:flex-start;gap:14px;">
+      <div style="width:40px;height:40px;border-radius:8px;{{BUILD_ICON_BG}};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i data-lucide="{{BUILD_ICON}}" style="width:18px;height:18px;{{BUILD_ICON_COLOR}}"></i>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <span class="label" style="display:block;margin-bottom:3px;">Build Decision</span>
+        <h3 style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:6px;">{{BUILD_QUESTION}}</h3>
+        <p style="font-size:13px;{{BUILD_TEXT_COLOR}};line-height:1.6;max-width:700px;overflow-wrap:break-word;word-break:keep-all;">{{BUILD_DECISION}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY — 6 cols -->
+  <div class="card col-6 reveal">
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div class="icon-box" style="background:var(--blue-light);border:1px solid var(--blue-mid);">
+          <i data-lucide="file-text" style="width:14px;height:14px;color:var(--blue)"></i>
+        </div>
+        <span class="label">Executive Readout</span>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+      </div>
+      <p style="font-size:14px;color:var(--ink);line-height:1.7;max-width:780px;overflow-wrap:break-word;word-break:keep-all;" class="accent-l">{{EXECUTIVE_SUMMARY}}</p>
+    </div>
+  </div>
+
+  <!-- MODULE RADAR — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--violet-light);border:1px solid #DDD6FE;">
+        <i data-lucide="grid-3x3" style="width:13px;height:13px;color:var(--violet)"></i>
+      </div>
+      <span class="label">Module Radar</span>
+    </div>
+    <div class="card-body">
+      <div class="chart-wrap tall"><canvas id="radarChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- HEATMAP — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--violet-light);border:1px solid #DDD6FE;">
+        <i data-lucide="grid-3x3" style="width:13px;height:13px;color:var(--violet)"></i>
+      </div>
+      <span class="label">Score Heatmap</span>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;" id="heatmap-grid"></div>
+    </div>
+  </div>
+
+  <!-- MARKET FUNNEL — 4 cols -->
+  <div class="card col-4 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--blue-light);border:1px solid var(--blue-mid);">
+        <i data-lucide="trending-up" style="width:13px;height:13px;color:var(--blue)"></i>
+      </div>
+      <span class="label">Market Size</span>
+    </div>
+    <div class="card-body">
+      <div id="market-funnel" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div style="background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:8px;padding:12px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+          <i data-lucide="zap" style="width:12px;height:12px;color:var(--amber)"></i>
+          <span class="label" style="color:var(--amber);">Key Trend</span>
+        </div>
+        <p style="font-size:13px;color:var(--ink);line-height:1.6;">{{MARKET_KEY_TREND}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEMAND SCORE + KEYWORDS — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="activity" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">Demand Stats</span>
+    </div>
+    <div class="card-body">
+      <div id="demand-scores" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div class="rule"></div>
+      <p class="label" style="margin-bottom:6px;">Buyer Language</p>
+      <div id="demand-keywords" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+    </div>
+  </div>
+
+  <!-- DEMAND SIGNALS — 4 cols -->
+  <div class="card col-4 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="activity" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">Demand Signals</span>
+    </div>
+    <div class="card-body" id="demand-signals" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+
+  <!-- COMPETITIVE — 2 cols (taller) -->
+  <div class="card col-2 row-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--rose-light);border:1px solid var(--rose-mid);">
+        <i data-lucide="crosshair" style="width:13px;height:13px;color:var(--rose)"></i>
+      </div>
+      <span class="label">Competitive</span>
+    </div>
+    <div class="card-body">
+      <div id="competitor-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div style="border-left:3px solid var(--blue);padding-left:12px;">
+        <span class="label" style="color:var(--blue);display:block;margin-bottom:3px;">Open Space</span>
+        <p style="font-size:12px;color:var(--ink);line-height:1.6;">{{COMPETITOR_WHITESPACE}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES — 4 cols -->
+  <div class="card col-4 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--violet-light);border:1px solid #DDD6FE;">
+        <i data-lucide="layers" style="width:13px;height:13px;color:var(--violet)"></i>
+      </div>
+      <span class="label">MVP Scope</span>
+    </div>
+    <div class="card-body">
+      <div id="feature-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div class="rule"></div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div>
+          <span class="label">MVP Score</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--blue);display:block;">{{FEATURE_MVP_SCORE}}</span>
+        </div>
+        <div style="width:1px;height:32px;background:var(--border);"></div>
+        <div>
+          <span class="label">Fit Rating</span>
+          <span style="font-size:13px;font-weight:600;color:var(--green);display:block;margin-top:1px;">{{FEATURE_FIT}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SWOT — 6 cols -->
+  <div class="card col-6 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="layout-grid" style="width:13px;height:13px;color:var(--amber)"></i>
+      </div>
+      <span class="label">SWOT Analysis</span>
+    </div>
+    <div class="card-body">
+      <div id="swot-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- PERSONAS — 4 cols -->
+  <div class="card col-4 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:#ECFEFF;border:1px solid #A5F3FC;">
+        <i data-lucide="users" style="width:13px;height:13px;color:#0891B2"></i>
+      </div>
+      <span class="label">Personas</span>
+    </div>
+    <div class="card-body" id="persona-cards" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+
+  <!-- GTM METRICS — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="rocket" style="width:13px;height:13px;color:var(--amber)"></i>
+      </div>
+      <span class="label">GTM Metrics</span>
+    </div>
+    <div class="card-body">
+      <div id="gtm-metrics" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- GTM PHASES — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="rocket" style="width:13px;height:13px;color:var(--amber)"></i>
+      </div>
+      <span class="label">GTM Phases</span>
+    </div>
+    <div class="card-body" id="gtm-phases" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+
+  <!-- MONETISATION — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="dollar-sign" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">Revenue Model</span>
+    </div>
+    <div class="card-body">
+      <div id="monetisation-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div class="rule"></div>
+      <div id="monetisation-metrics" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- RISKS — 4 cols -->
+  <div class="card col-4 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--rose-light);border:1px solid var(--rose-mid);">
+        <i data-lucide="shield-alert" style="width:13px;height:13px;color:var(--rose)"></i>
+      </div>
+      <span class="label">Risk Register</span>
+    </div>
+    <div class="card-body" id="risk-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+
+  <!-- MOAT — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="shield" style="width:13px;height:13px;color:var(--amber)"></i>
+      </div>
+      <span class="label">Moat</span>
+    </div>
+    <div class="card-body">
+      <div id="moat-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div class="rule"></div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div>
+          <span class="label">Score</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--amber);display:block;">{{MOAT_DEFENSIBILITY}}</span>
+        </div>
+        <div style="width:1px;height:30px;background:var(--border);"></div>
+        <div>
+          <span class="label">Overall</span>
+          <span style="font-size:13px;font-weight:600;color:var(--ink);display:block;margin-top:1px;">{{MOAT_OVERALL}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--blue-light);border:1px solid var(--blue-mid);">
+        <i data-lucide="cpu" style="width:13px;height:13px;color:var(--blue)"></i>
+      </div>
+      <span class="label">Tech Stack</span>
+    </div>
+    <div class="card-body">
+      <div id="tech-stack" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;">
+        <span style="font-size:12px;color:var(--ink2);">Complexity: <strong style="color:var(--ink);">{{TECH_COMPLEXITY}}</strong></span>
+        <span style="font-size:12px;color:var(--ink2);">Build: <strong style="color:var(--ink);">{{TECH_BUILD_TIME}}</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- READINESS — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--blue-light);border:1px solid var(--blue-mid);">
+        <i data-lucide="cpu" style="width:13px;height:13px;color:var(--blue)"></i>
+      </div>
+      <span class="label">Readiness</span>
+    </div>
+    <div class="card-body">
+      <div id="tech-readiness" style="display:flex;flex-direction:column;gap:7px;"></div>
+    </div>
+  </div>
+
+  <!-- HIRING — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--violet-light);border:1px solid #DDD6FE;">
+        <i data-lucide="briefcase" style="width:13px;height:13px;color:var(--violet)"></i>
+      </div>
+      <span class="label">Hiring Roadmap</span>
+    </div>
+    <div class="card-body">
+      <div id="hiring-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+      <div style="background:var(--rose-light);border:1px solid var(--rose-mid);border-radius:8px;padding:12px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+          <i data-lucide="alert-triangle" style="width:12px;height:12px;color:var(--rose)"></i>
+          <span class="label" style="color:var(--rose);">Critical Gap</span>
+        </div>
+        <p style="font-size:12px;color:var(--ink);margin-bottom:6px;line-height:1.5;">{{HIRING_GAP}}</p>
+        <span class="label" style="display:block;margin-bottom:2px;">Structure</span>
+        <p style="font-size:11px;color:var(--ink2);line-height:1.5;">{{HIRING_STRUCTURE}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ECOSYSTEM — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="git-branch" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">Ecosystem</span>
+    </div>
+    <div class="card-body">
+      <div id="ecosystem-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+      <div style="background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:8px;padding:12px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+          <i data-lucide="network" style="width:12px;height:12px;color:var(--blue)"></i>
+          <span class="label" style="color:var(--blue);">Distribution</span>
+        </div>
+        <p style="font-size:12px;color:var(--ink);line-height:1.6;">{{ECOSYSTEM_DISTRIBUTION}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNIT ECONOMICS — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="bar-chart-3" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">Unit Economics</span>
+    </div>
+    <div class="card-body">
+      <div id="econ-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- LOCALIZATION — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--blue-light);border:1px solid var(--blue-mid);">
+        <i data-lucide="globe" style="width:13px;height:13px;color:var(--blue)"></i>
+      </div>
+      <span class="label">Localization</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span class="label">Fit Score</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--blue);">{{LOCALIZATION_FIT}}</span>
+      </div>
+      <p class="label" style="margin-bottom:5px;">Nuances</p>
+      <div id="local-nuances" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;"></div>
+      <p class="label" style="margin-bottom:5px;">Local Competitors</p>
+      <div id="local-competitors" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;"></div>
+      <div style="background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:8px;padding:10px;">
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
+          <i data-lucide="pencil" style="width:11px;height:11px;color:var(--amber)"></i>
+          <span class="label" style="color:var(--amber);">Adaptation</span>
+        </div>
+        <p style="font-size:12px;color:var(--ink);line-height:1.5;">{{LOCALIZATION_ADAPTATION}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCESSIBILITY — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="accessibility" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">A11y</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span class="label">Score</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--score-warn);">{{ACCESSIBILITY_SCORE}}</span>
+      </div>
+      <p class="label" style="margin-bottom:6px;">Gaps</p>
+      <ul id="accessibility-gaps" style="list-style:none;display:flex;flex-direction:column;gap:5px;margin-bottom:10px;"></ul>
+      <p class="label" style="margin-bottom:6px;">Recommendations</p>
+      <ul id="accessibility-rec" style="list-style:none;display:flex;flex-direction:column;gap:5px;"></ul>
+    </div>
+  </div>
+
+  <!-- COMPLIANCE — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--rose-light);border:1px solid var(--rose-mid);">
+        <i data-lucide="scale" style="width:13px;height:13px;color:var(--rose)"></i>
+      </div>
+      <span class="label">Compliance</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <span class="label">Risk Level</span>
+        <span id="compliance-pill" style="display:inline-block;padding:3px 12px;border-radius:999px;font-size:11px;font-weight:700;">{{COMPLIANCE_RISK_LEVEL}}</span>
+      </div>
+      <div id="compliance-flags" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;"></div>
+      <div class="rule"></div>
+      <p class="label" style="margin-bottom:6px;">Next Steps</p>
+      <ul id="compliance-next-steps" style="list-style:none;display:flex;flex-direction:column;gap:5px;"></ul>
+    </div>
+  </div>
+
+  <!-- EXIT — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="target" style="width:13px;height:13px;color:var(--amber)"></i>
+      </div>
+      <span class="label">Exit</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span class="label">Attractiveness</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--amber);">{{EXIT_ATTRACTIVENESS}}</span>
+      </div>
+      <p class="label" style="margin-bottom:5px;">Acquirers</p>
+      <div id="exit-acquirers" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;"></div>
+      <p class="label" style="margin-bottom:3px;">Strategic Value</p>
+      <p style="font-size:12px;color:var(--ink);line-height:1.6;margin-bottom:8px;">{{EXIT_STRATEGIC_VALUE}}</p>
+      <p class="label" style="margin-bottom:2px;">Horizon</p>
+      <p style="font-size:12px;color:var(--ink2);">{{EXIT_TIMELINE}}</p>
+    </div>
+  </div>
+
+  <!-- OPS — 6 cols -->
+  <div class="card col-6 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--surface2);border:1px solid var(--border);">
+        <i data-lucide="settings-2" style="width:13px;height:13px;color:var(--ink2)"></i>
+      </div>
+      <span class="label">Operational Complexity</span>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;" id="ops-metrics"></div>
+      <div id="ops-hurdles" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER — 6 cols -->
+  <footer class="col-6" style="text-align:center;padding:32px 0 16px;border-top:1px solid var(--border);margin-top:8px;" class="reveal">
+    <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:8px;">
+      <i data-lucide="sparkles" style="width:13px;height:13px;color:var(--ink3)"></i>
+      <span style="font-size:12px;color:var(--ink2);">Generated by <strong style="color:var(--ink);font-family:'Syne',sans-serif;">PRD Intelligence</strong></span>
+    </div>
+    <p style="font-size:11px;color:var(--ink3);">{{REPORT_DATE}} &nbsp;&middot;&nbsp; {{REPORT_SUCCESSFUL}}/20 modules &nbsp;&middot;&nbsp; {{REPORT_TITLE}}</p>
+  </footer>
+
+</div><!-- /bento -->
+
+<script>
+// ===== DATA — agent replaces these =====
+const MODULE_DATA = {{MODULE_DATA}};
+const DEMAND_DATA = {{DEMAND_DATA}};
+const COMPETITOR_DATA = {{COMPETITOR_DATA}};
+const FEATURE_DATA = {{FEATURE_DATA}};
+const READINESS_DATA = {{READINESS_DATA}};
+const MARKET_FUNNEL_DATA = {{MARKET_FUNNEL_DATA}};
+const DEMAND_SCORE_DATA = {{DEMAND_SCORE_DATA}};
+const DEMAND_KEYWORD_DATA = {{DEMAND_KEYWORD_DATA}};
+const SWOT_DATA = {{SWOT_DATA}};
+const PERSONA_DATA = {{PERSONA_DATA}};
+const GTM_DATA = {{GTM_DATA}};
+const GTM_METRIC_DATA = {{GTM_METRIC_DATA}};
+const MONETISATION_DATA = {{MONETISATION_DATA}};
+const MONETISATION_METRIC_DATA = {{MONETISATION_METRIC_DATA}};
+const RISK_DATA = {{RISK_DATA}};
+const MOAT_DATA = {{MOAT_DATA}};
+const TECH_STACK_DATA = {{TECH_STACK_DATA}};
+const HIRING_DATA = {{HIRING_DATA}};
+const ECOSYSTEM_DATA = {{ECOSYSTEM_DATA}};
+const ECON_DATA = {{ECON_DATA}};
+const LOCAL_NUANCE_DATA = {{LOCAL_NUANCE_DATA}};
+const LOCAL_COMPETITOR_DATA = {{LOCAL_COMPETITOR_DATA}};
+const A11Y_GAP_DATA = {{A11Y_GAP_DATA}};
+const A11Y_REC_DATA = {{A11Y_REC_DATA}};
+const COMPLIANCE_FLAG_DATA = {{COMPLIANCE_FLAG_DATA}};
+const COMPLIANCE_NEXT_DATA = {{COMPLIANCE_NEXT_DATA}};
+const EXIT_ACQUIRER_DATA = {{EXIT_ACQUIRER_DATA}};
+const OPS_METRIC_DATA = {{OPS_METRIC_DATA}};
+const OPS_HURDLE_DATA = {{OPS_HURDLE_DATA}};
+
+// ===== DARK MODE =====
+function toggleDark() {
+  var h = document.documentElement;
+  var isDark = h.classList.toggle('dark-mode');
+  localStorage.setItem('prd-dark-mode', isDark ? '1' : '0');
+  var icon = document.getElementById('darkIcon');
+  if (icon) icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+  if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+}
+(function(){
+  var h = document.documentElement;
+  var saved = localStorage.getItem('prd-dark-mode');
+  if (saved === '1') { h.classList.add('dark-mode'); }
+  else if (saved === null && window.matchMedia('(prefers-color-scheme:dark)').matches) {
+    h.classList.add('dark-mode');
+  }
+  var isDark = h.classList.contains('dark-mode');
+  var icon = document.getElementById('darkIcon');
+  if (icon) icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+})();
+
+// ===== HELPERS =====
+function cv(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+function sc(s) {
+  if (s == null) return '#CBC8BF';
+  if (s >= 75) return '#15803D';
+  if (s >= 50) return '#B45309';
+  if (s >= 25) return '#C2410C';
+  return '#DC2626';
+}
+function sbg(s) {
+  if (s == null) return cv('--surface2');
+  if (s >= 75) return cv('--green-light');
+  if (s >= 50) return cv('--amber-light');
+  if (s >= 25) return 'color-mix(in srgb,'+cv('--amber')+' 10%,transparent)';
+  return cv('--rose-light');
+}
+function tt(t) { var l = (t||'').toLowerCase(); return l==='high'?'badge-hi':l==='medium'?'badge-med':'badge-lo'; }
+function av(i) { var c=['av-b','av-g','av-a','av-r','av-v']; return c[i%c.length]; }
+function inits(str) { return (str||'').split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2); }
+function pc(p) { return p==='Core'?'p-core':p==='Nice-to-have'?'p-nice':'p-fut'; }
+function sc2(s) { var l=(s||'').toLowerCase(); return l==='strong'?'b-s':l==='moderate'?'b-m':'b-w'; }
+
+// ===== HERO DOUGHNUT =====
+(function(){
+  var el = document.getElementById('heroScore');
+  if (!el) return;
+  var score = parseInt('{{REPORT_SCORE}}') || 0;
+  var c = sc(score);
+  new Chart(el, {
+    type:'doughnut',
+    data:{ datasets:[{ data:[score,100-score], backgroundColor:[c,cv('--chart-donut-bg')], borderWidth:0, borderRadius:4, spacing:2 }] },
+    options:{ cutout:'78%', responsive:false, plugins:{ legend:{display:false}, tooltip:{enabled:false} } }
+  });
+})();
+
+// ===== BUILD COMPLIANCE PILL =====
+(function(){
+  var el = document.getElementById('compliance-pill');
+  if (!el) return;
+  var level = '{{COMPLIANCE_RISK_LEVEL}}'.toLowerCase();
+  el.className = (level==='high'?'badge-hi':level==='medium'?'badge-med':'badge-lo') + ' ' + (el.className.replace(/badge-\w+/g,''));
+})();
+
+// ===== EMPTY STATE =====
+function emptyMsg(containerId) {
+  var el = document.getElementById(containerId);
+  if (!el) return;
+  if (el.children.length === 0 || (el.children.length === 1 && el.children[0].tagName === 'P' && el.children[0].className === 'empty-state')) return;
+  if (el.querySelector('.empty-state')) return;
+  el.innerHTML = '<p class="empty-state" style="font-size:12px;color:'+cv('--ink3')+';text-align:center;padding:24px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">'+
+    '<i data-lucide="eye-off" style="width:18px;height:18px;opacity:0.5;"></i>'+
+    '<span>Module data not available this run</span></p>';
+}
+
+// ===== BUILDERS =====
+function bHeatmap() {
+  var g = document.getElementById('heatmap-grid');
+  if (!g) return;
+  MODULE_DATA.forEach(function(m){
+    var s=m.score, c=sc(s), bg=sbg(s);
+    var d=document.createElement('div'); d.className='htile';
+    d.setAttribute('data-module-key',m.key);
+    d.setAttribute('data-module-label',m.label);
+    d.setAttribute('data-module-score',s!=null?s:'');
+    d.style.background=bg;
+    d.innerHTML='<i data-lucide="'+m.icon+'" style="width:13px;height:13px;color:'+c+'"></i>'+
+      '<span style="font-size:8px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:'+cv('--ink3')+';">'+m.label+'</span>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:11px;font-weight:700;color:'+c+';">'+(s!=null?s:'&mdash;')+'</span>';
+    g.appendChild(d);
+  });
+}
+function bRadar() {
+  var canvas = document.getElementById('radarChart');
+  if (!canvas) return;
+  var sm = MODULE_DATA.filter(function(m){return m.score!=null;});
+  if (sm.length<3) return;
+  new Chart(canvas, {
+    type:'radar',
+    data:{ labels:sm.map(function(m){return m.label;}), datasets:[{ data:sm.map(function(m){return m.score;}), backgroundColor:'rgba(29,78,216,0.08)', borderColor:'rgba(29,78,216,0.7)', borderWidth:2, pointBackgroundColor:sm.map(function(m){return sc(m.score);}), pointBorderColor:cv('--chart-point-bg'), pointBorderWidth:1.5, pointRadius:4 }] },
+    options:{ responsive:true, maintainAspectRatio:true, scales:{ r:{ beginAtZero:true, max:100, ticks:{stepSize:25,font:{size:9,family:"'JetBrains Mono', monospace"},backdropColor:'transparent',color:cv('--ink3')}, grid:{color:cv('--chart-grid')}, angleLines:{color:cv('--chart-grid')}, pointLabels:{font:{size:9,weight:'600',family:"'DM Sans', sans-serif"},color:cv('--ink2')} } }, plugins:{legend:{display:false}} }
+  });
+}
+function bMarketFunnel() {
+  var el = document.getElementById('market-funnel');
+  if (!el||!MARKET_FUNNEL_DATA) return;
+  var labels=['TAM','SAM','SOM'];
+  el.innerHTML = MARKET_FUNNEL_DATA.map(function(d,i){
+    return '<div class="trow" style="flex-direction:column;gap:5px;margin-left:'+(i*16)+'px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;">'+
+      '<span class="label" style="color:'+(i===0?'var(--blue)':'')+';">'+labels[i]+'</span>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:'+(18-i*2)+'px;font-weight:700;color:var(--ink);">'+d.value+'</span></div>'+
+      '<p style="font-size:11px;color:var(--ink2);">'+d.desc+'</p></div>';
+  }).join('');
+}
+function bDemandScores() {
+  var el = document.getElementById('demand-scores');
+  if (!el||!DEMAND_SCORE_DATA) return;
+  el.innerHTML = DEMAND_SCORE_DATA.map(function(d){
+    return '<div class="stat-box"><span class="label">'+d.label+'</span>'+
+      '<span class="stat-val" style="'+(d.score!==undefined?'color:'+sc(d.score)+';':'')+(d.label!=='Score'?'font-size:15px;font-family:\'DM Sans\',sans-serif;font-weight:600;':'')+'">'+d.value+'</span></div>';
+  }).join('');
+}
+function bDemandSignals() {
+  var el = document.getElementById('demand-signals');
+  if (!el) return;
+  el.innerHTML = DEMAND_DATA.map(function(d){
+    var c = sc(d.strength);
+    return '<div style="display:flex;align-items:center;gap:8px;">'+
+      '<div style="flex:1;min-width:0;"><strong style="font-size:12px;color:'+cv('--ink')+';">'+d.name+'</strong>'+
+      '<p style="font-size:10px;color:'+cv('--ink3')+';margin-top:1px;">'+d.desc+'</p></div>'+
+      '<div style="width:60px;flex-shrink:0;"><div class="prog-track"><div class="prog-fill" style="width:'+d.strength+'%;background:'+c+';"></div></div></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:700;color:'+c+';width:20px;text-align:right;">'+d.strength+'</span></div>';
+  }).join('');
+}
+function bDemandKeywords() {
+  var el = document.getElementById('demand-keywords');
+  if (!el) return;
+  el.innerHTML = DEMAND_KEYWORD_DATA.map(function(k){return '<span class="tag">'+k+'</span>';}).join('');
+}
+function bCompetitors() {
+  var el = document.getElementById('competitor-list');
+  if (!el) return;
+  el.innerHTML = COMPETITOR_DATA.map(function(c){
+    return '<div class="trow" style="flex-direction:column;gap:4px;">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">'+
+      '<div style="display:flex;align-items:center;gap:6px;"><strong style="font-size:12px;color:'+cv('--ink')+';">'+c.name+'</strong>'+
+      '<span class="'+tt(c.threat)+'" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;">'+c.threat+'</span></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:700;color:'+sc(c.fit)+'">'+c.fit+'</span></div>'+
+      '<p style="font-size:10px;color:'+cv('--ink2')+';">'+c.pos+'</p>'+
+      '<p style="font-size:10px;color:'+cv('--ink3')+';">'+c.weakness+'</p></div>';
+  }).join('');
+}
+function bFeatures() {
+  var el = document.getElementById('feature-list');
+  if (!el) return;
+  el.innerHTML = FEATURE_DATA.map(function(f){
+    var c=sc(f.fit);
+    return '<div style="display:flex;align-items:center;gap:8px;">'+
+      '<div style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;">'+
+      '<strong style="font-size:12px;color:'+cv('--ink')+';">'+f.name+'</strong><span class="'+pc(f.priority)+'">'+f.priority+'</span></div>'+
+      '<div style="width:56px;flex-shrink:0;"><div class="prog-track"><div class="prog-fill" style="width:'+f.fit+'%;background:'+c+';"></div></div></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:700;color:'+c+';width:20px;text-align:right;">'+f.fit+'</span></div>';
+  }).join('');
+}
+function bSwot() {
+  var el = document.getElementById('swot-grid');
+  if (!el||!SWOT_DATA) return;
+  var tones={strengths:'s',weaknesses:'w',opportunities:'o',threats:'t'};
+  var icons={strengths:'arrow-up-right',weaknesses:'arrow-down-right',opportunities:'star',threats:'alert-triangle'};
+  var colors={strengths:'var(--green)',weaknesses:'var(--rose)',opportunities:'var(--blue)',threats:'var(--amber)'};
+  el.innerHTML = SWOT_DATA.map(function(g){
+    var k=g.key, tone=tones[k]||'s', icon=icons[k]||'circle', color=colors[k]||'var(--ink)';
+    return '<div class="swot-cell swot-'+tone+'">'+
+      '<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">'+
+      '<i data-lucide="'+icon+'" style="width:13px;height:13px;color:'+color+'"></i>'+
+      '<span style="font-size:10px;font-weight:700;color:'+color+';letter-spacing:0.1em;text-transform:uppercase;">'+g.title+'</span></div>'+
+      '<ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">'+
+      g.items.map(function(item){return '<li style="font-size:11px;color:var(--ink);line-height:1.5;display:flex;gap:6px;align-items:flex-start;">'+
+        '<span style="width:5px;height:5px;border-radius:50%;background:'+color+';flex-shrink:0;margin-top:5px;"></span>'+item+'</li>';}).join('')+
+      '</ul></div>';
+  }).join('');
+}
+function bPersonas() {
+  var el = document.getElementById('persona-cards');
+  if (!el||!PERSONA_DATA) return;
+  el.innerHTML = PERSONA_DATA.map(function(p,i){
+    return '<div class="persona-card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'+
+      '<div class="avatar '+av(i)+'">'+inits(p.name)+'</div>'+
+      '<div><span class="label" style="display:block;">'+p.role+'</span>'+
+      '<h4 style="font-family:\'Syne\',sans-serif;font-size:13px;font-weight:700;color:var(--ink);margin-top:1px;">'+p.name+'</h4></div></div>'+
+      '<div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">'+
+      '<p style="font-size:11px;color:var(--ink2);"><strong style="color:var(--ink);">Pain:</strong> '+p.pain+'</p>'+
+      '<p style="font-size:11px;color:var(--ink2);"><strong style="color:var(--ink);">Goal:</strong> '+p.goal+'</p></div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:4px;">'+p.tags.map(function(t){return '<span class="tag">'+t+'</span>';}).join('')+'</div></div>';
+  }).join('');
+}
+function bGtm() {
+  var el = document.getElementById('gtm-phases');
+  if (!el||!GTM_DATA) return;
+  el.innerHTML = GTM_DATA.map(function(p){
+    return '<div class="trow" style="align-items:flex-start;">'+
+      '<div class="tl-dot" style="margin-top:2px;">'+p.phase+'</div>'+
+      '<div style="flex:1;min-width:0;"><strong style="font-size:12px;color:var(--ink);font-family:\'Syne\',sans-serif;">'+p.title+'</strong>'+
+      '<p style="font-size:11px;color:var(--ink2);margin-top:3px;line-height:1.5;">'+p.desc+'</p>'+
+      '<div style="display:flex;gap:12px;margin-top:4px;">'+
+      '<span style="font-size:10px;color:var(--ink3);display:flex;align-items:center;gap:3px;"><i data-lucide="clock" style="width:9px;height:9px;"></i>'+p.timeline+'</span>'+
+      '<span style="font-size:10px;color:var(--ink3);display:flex;align-items:center;gap:3px;"><i data-lucide="radio" style="width:9px;height:9px;"></i>'+p.channel+'</span></div></div></div>';
+  }).join('');
+}
+function bGtmMetrics() {
+  var el = document.getElementById('gtm-metrics');
+  if (!el||!GTM_METRIC_DATA) return;
+  el.innerHTML = GTM_METRIC_DATA.map(function(m){
+    return '<div class="stat-box"><span class="label">'+m.label+'</span><span class="stat-val" style="font-size:13px;font-family:\'DM Sans\',sans-serif;font-weight:600;">'+m.value+'</span></div>';
+  }).join('');
+}
+function bMonetisation() {
+  var el = document.getElementById('monetisation-list');
+  if (!el||!MONETISATION_DATA) return;
+  el.innerHTML = MONETISATION_DATA.map(function(m){
+    return '<div class="trow"><div style="flex:1;min-width:0;"><strong style="font-size:12px;color:var(--ink);">'+m.name+'</strong>'+
+      '<p style="font-size:10px;color:var(--ink2);margin-top:2px;">'+m.desc+'</p></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:14px;font-weight:700;color:'+sc(m.fit)+';">'+m.fit+'</span></div>';
+  }).join('');
+}
+function bMonetisationMetrics() {
+  var el = document.getElementById('monetisation-metrics');
+  if (!el||!MONETISATION_METRIC_DATA) return;
+  el.innerHTML = MONETISATION_METRIC_DATA.map(function(m){
+    return '<div class="stat-box"><span class="label">'+m.label+'</span><span class="stat-val" style="font-size:11px;font-family:\'DM Sans\',sans-serif;font-weight:600;">'+m.value+'</span></div>';
+  }).join('');
+}
+function bRisks() {
+  var el = document.getElementById('risk-list');
+  if (!el||!RISK_DATA) return;
+  el.innerHTML = RISK_DATA.map(function(r){
+    var tc = tt(r.level);
+    return '<div style="border-radius:8px;border:1px solid;padding:12px;" class="'+tc+'">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">'+
+      '<strong style="font-size:12px;color:var(--ink);">'+r.name+'</strong>'+
+      '<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;background:'+(r.level==='High'?'#BE123C':r.level==='Medium'?'#B45309':'#15803D')+';color:'+cv('--chart-point-bg')+';">'+r.level+'</span></div>'+
+      '<p style="font-size:11px;color:var(--ink2);line-height:1.5;margin-bottom:5px;">'+r.desc+'</p>'+
+      '<p style="font-size:10px;color:var(--ink);display:flex;gap:4px;align-items:flex-start;"><i data-lucide="shield" style="width:10px;height:10px;flex-shrink:0;margin-top:1px;"></i>'+r.mit+'</p></div>';
+  }).join('');
+}
+function bMoat() {
+  var el = document.getElementById('moat-list');
+  if (!el||!MOAT_DATA) return;
+  el.innerHTML = MOAT_DATA.map(function(m){
+    return '<div class="trow"><div style="flex:1;min-width:0;"><strong style="font-size:12px;color:var(--ink);">'+m.name+'</strong>'+
+      '<p style="font-size:10px;color:var(--ink2);margin-top:2px;">'+m.desc+'</p></div>'+
+      '<span class="'+sc2(m.strength)+'" style="font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;flex-shrink:0;">'+m.strength+'</span></div>';
+  }).join('');
+}
+function bTechStack() {
+  var el = document.getElementById('tech-stack');
+  if (!el||!TECH_STACK_DATA) return;
+  el.innerHTML = TECH_STACK_DATA.map(function(t){
+    return '<div class="trow" style="flex-direction:column;gap:2px;"><span class="label">'+t.layer+'</span>'+
+      '<strong style="font-size:12px;color:var(--ink);">'+t.tech+'</strong>'+
+      '<p style="font-size:10px;color:var(--ink3);">'+t.desc+'</p></div>';
+  }).join('');
+}
+function bReadiness() {
+  var el = document.getElementById('tech-readiness');
+  if (!el) return;
+  el.innerHTML = READINESS_DATA.map(function(r){
+    var c = sc(r.score);
+    return '<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:'+cv('--ink2')+';width:100px;flex-shrink:0;">'+r.dim+'</span>'+
+      '<div style="flex:1;"><div class="prog-track"><div class="prog-fill" style="width:'+r.score+'%;background:'+c+';"></div></div></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:700;color:'+c+';width:18px;text-align:right;">'+r.score+'</span></div>';
+  }).join('');
+}
+function bHiring() {
+  var el = document.getElementById('hiring-list');
+  if (!el||!HIRING_DATA) return;
+  el.innerHTML = HIRING_DATA.map(function(h){
+    return '<div class="trow"><div style="flex:1;"><strong style="font-size:12px;color:var(--ink);">'+h.title+'</strong>'+
+      '<span style="font-size:10px;color:var(--ink3);margin-left:6px;">'+h.timeline+'</span></div>'+
+      '<span class="'+pc(h.priority)+'">'+h.priority+'</span></div>';
+  }).join('');
+}
+function bEcosystem() {
+  var el = document.getElementById('ecosystem-list');
+  if (!el||!ECOSYSTEM_DATA) return;
+  el.innerHTML = ECOSYSTEM_DATA.map(function(e){
+    return '<div class="trow"><div style="flex:1;min-width:0;"><strong style="font-size:12px;color:var(--ink);">'+e.platform+'</strong>'+
+      '<p style="font-size:10px;color:var(--ink2);margin-top:1px;">'+e.desc+'</p></div>'+
+      '<span class="'+pc(e.priority)+'">'+e.priority+'</span></div>';
+  }).join('');
+}
+function bEcon() {
+  var el = document.getElementById('econ-grid');
+  if (!el||!ECON_DATA) return;
+  el.innerHTML = ECON_DATA.map(function(e){
+    return '<div class="stat-box"><span class="label">'+e.label+'</span>'+
+      '<span class="stat-val" style="'+(e.color?'color:'+e.color+';':'')+'">'+e.value+'</span></div>';
+  }).join('');
+}
+function bLocalNuances() {
+  var el = document.getElementById('local-nuances');
+  if (!el) return;
+  el.innerHTML = LOCAL_NUANCE_DATA.map(function(n){return '<span class="tag">'+n+'</span>';}).join('');
+}
+function bLocalCompetitors() {
+  var el = document.getElementById('local-competitors');
+  if (!el) return;
+  el.innerHTML = LOCAL_COMPETITOR_DATA.map(function(c){return '<span class="tag">'+c+'</span>';}).join('');
+}
+function bA11y() {
+  var g = document.getElementById('accessibility-gaps');
+  if (g && A11Y_GAP_DATA) g.innerHTML = A11Y_GAP_DATA.map(function(x){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="circle-dot" style="width:11px;height:11px;color:var(--rose);flex-shrink:0;margin-top:2px;"></i>'+x+'</li>';}).join('');
+  var r = document.getElementById('accessibility-rec');
+  if (r && A11Y_REC_DATA) r.innerHTML = A11Y_REC_DATA.map(function(x){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="check-circle" style="width:11px;height:11px;color:var(--green);flex-shrink:0;margin-top:2px;"></i>'+x+'</li>';}).join('');
+}
+function bComplianceFlags() {
+  var el = document.getElementById('compliance-flags');
+  if (!el||!COMPLIANCE_FLAG_DATA) return;
+  el.innerHTML = COMPLIANCE_FLAG_DATA.map(function(f){
+    return '<div class="trow" style="flex-direction:column;gap:4px;"><div style="display:flex;align-items:center;justify-content:space-between;">'+
+      '<strong style="font-size:12px;color:var(--ink);">'+f.name+'</strong>'+
+      '<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;" class="'+tt(f.level)+'">'+f.level+'</span></div>'+
+      '<p style="font-size:10px;color:var(--ink2);line-height:1.5;">'+f.desc+'</p></div>';
+  }).join('');
+}
+function bComplianceNext() {
+  var el = document.getElementById('compliance-next-steps');
+  if (!el) return;
+  el.innerHTML = COMPLIANCE_NEXT_DATA.map(function(n){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="arrow-right" style="width:11px;height:11px;color:var(--blue);flex-shrink:0;margin-top:2px;"></i>'+n+'</li>';}).join('');
+}
+function bExitAcquirers() {
+  var el = document.getElementById('exit-acquirers');
+  if (!el) return;
+  el.innerHTML = EXIT_ACQUIRER_DATA.map(function(a){return '<span class="tag">'+a+'</span>';}).join('');
+}
+function bOpsMetrics() {
+  var el = document.getElementById('ops-metrics');
+  if (!el||!OPS_METRIC_DATA) return;
+  el.innerHTML = OPS_METRIC_DATA.map(function(m){
+    return '<div class="stat-box"><span class="label">'+m.label+'</span>'+
+      '<span class="stat-val" style="'+(m.color?'color:'+m.color+';':'')+(m.font?'font-size:'+m.font+';font-family:\'DM Sans\',sans-serif;font-weight:600;':'')+'">'+m.value+'</span></div>';
+  }).join('');
+}
+function bOpsHurdles() {
+  var el = document.getElementById('ops-hurdles');
+  if (!el||!OPS_HURDLE_DATA) return;
+  el.innerHTML = OPS_HURDLE_DATA.map(function(h){
+    return '<div class="trow"><div style="flex:1;min-width:0;"><strong style="font-size:12px;color:var(--ink);">'+h.name+'</strong>'+
+      '<p style="font-size:10px;color:var(--ink2);margin-top:1px;">'+h.desc+'</p></div>'+
+      '<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;background:'+(h.impact==='High'?'#BE123C':h.impact==='Medium'?'#B45309':'#15803D')+';color:'+cv('--chart-point-bg')+';flex-shrink:0;">'+h.impact.slice(0,3)+'</span></div>';
+  }).join('');
+}
+
+// ===== INIT =====
+(function init(){
+  bHeatmap(); bRadar(); bMarketFunnel(); bDemandScores(); bDemandSignals(); bDemandKeywords();
+  bCompetitors(); bFeatures(); bSwot(); bPersonas(); bGtm(); bGtmMetrics();
+  bMonetisation(); bMonetisationMetrics(); bRisks(); bMoat(); bTechStack(); bReadiness();
+  bHiring(); bEcosystem(); bEcon(); bLocalNuances(); bLocalCompetitors();
+  bA11y(); bComplianceFlags(); bComplianceNext(); bExitAcquirers(); bOpsMetrics(); bOpsHurdles();
+
+  // Empty-state fallbacks for modules that produced no data
+  emptyMsg('demand-signals'); emptyMsg('demand-keywords'); emptyMsg('competitor-list');
+  emptyMsg('feature-list'); emptyMsg('swot-grid'); emptyMsg('persona-cards');
+  emptyMsg('gtm-phases'); emptyMsg('gtm-metrics'); emptyMsg('monetisation-list');
+  emptyMsg('monetisation-metrics'); emptyMsg('risk-list'); emptyMsg('moat-list');
+  emptyMsg('tech-stack'); emptyMsg('tech-readiness'); emptyMsg('hiring-list');
+  emptyMsg('ecosystem-list'); emptyMsg('econ-grid'); emptyMsg('local-nuances');
+  emptyMsg('local-competitors'); emptyMsg('accessibility-gaps'); emptyMsg('accessibility-rec');
+  emptyMsg('compliance-flags'); emptyMsg('compliance-next-steps'); emptyMsg('exit-acquirers');
+  emptyMsg('ops-metrics'); emptyMsg('ops-hurdles'); emptyMsg('market-funnel');
+
+  if (typeof lucide !== 'undefined' && lucide.createIcons) { lucide.createIcons(); }
+
+  var rv = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var ob = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); ob.unobserve(e.target); } });
+    }, { threshold:0.08, rootMargin:'0px 0px -30px 0px' });
+    rv.forEach(function(el){ ob.observe(el); });
+  } else { rv.forEach(function(el){ el.classList.add('visible'); }); }
+})();
+</script>
+
+</body>
+</html>
