@@ -10,12 +10,12 @@ This guide explains how to run a full PRD analysis from start to finish. **Provi
 1. Paste PRD + pick industry/geography
 2. Run Module 1 (Executive Summary)
 3. Check stop conditions — continue or stop with a partial report
-4. Run Modules 2–20 in batches of 3
+4. Run Modules 2–25 in batches of 3
 5. Generate the HTML dashboard
 6. Present the summary
 ```
 
-Total: ~20–40 minutes with a standard LLM. Each module call returns a single JSON object.
+Total: ~25–50 minutes with a standard LLM. Each module call returns a single JSON object.
 
 ---
 
@@ -83,9 +83,9 @@ If `insufficientContext` is true AND the PRD is under 80 words with no problem/p
 If verdict is "Weak" AND overallScore < 45 → **STOP**. Generate a partial HTML with a "Stop" banner explaining why. The `stopAnalysisReason` or `buildDecision` text goes in the banner.
 
 **Condition C — Continue:**
-Otherwise, proceed to Modules 2-20.
+Otherwise, proceed to Modules 2-25.
 
-### Step 5: Run Modules 2-20
+### Step 5: Run Modules 2-25
 
 Process modules **in batches of 3** to stay within context limits. For each module:
 
@@ -96,13 +96,15 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 5. Include industry and geography
 
 **Batch order (recommended):**
-- Batch 1: Market Sizing, Demand Signals, Competitive Landscape
-- Batch 2: User Personas, Feature-Market Fit, SWOT
-- Batch 3: Go-to-Market, Monetisation, Risk Register
-- Batch 4: Competitive Moat, Tech Stack, Operational Audit
-- Batch 5: Hiring Roadmap, Ecosystem Strategy, Unit Economics
-- Batch 6: Localization Fit, Accessibility, Compliance Risk
-- Batch 7: Strategic Exit
+- Batch 1: Founder-Market Fit, Market Sizing, Demand Signals
+- Batch 2: Competitive Landscape, User Personas, Feature-Market Fit
+- Batch 3: SWOT, Go-to-Market, Monetisation
+- Batch 4: Pricing Sensitivity, Risk Register, Competitive Moat
+- Batch 5: Tech Stack, Open-Source Viability, Operational Audit
+- Batch 6: Hiring Roadmap, Ecosystem Strategy, Unit Economics
+- Batch 7: Localization Fit, Accessibility, Compliance Risk
+- Batch 8: Sustainability/ESG, Fundraising Readiness
+- Batch 9: Strategic Exit
 
 **If a module returns invalid JSON:**
 1. **Retry 1** — Send a repair prompt with the broken JSON and the schema
@@ -146,6 +148,22 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 | `{{EXIT_ATTRACTIVENESS}}` | exit.attractiveness |
 | `{{EXIT_STRATEGIC_VALUE}}` | exit.strategicValue |
 | `{{EXIT_TIMELINE}}` | exit.exitTimeline |
+| `{{ESG_SCORE}}` | esg.overallScore |
+| `{{ESG_ENV}}` | esg.environmentalScore |
+| `{{ESG_SOCIAL}}` | esg.socialScore |
+| `{{ESG_GOV}}` | esg.governanceScore |
+| `{{FOUNDER_SCORE}}` | founder.overallScore |
+| `{{FOUNDER_GAP}}` | founder.criticalGap |
+| `{{OS_SCORE}}` | openSource.viabilityScore |
+| `{{OS_MODEL}}` | openSource.recommendedModel |
+| `{{OS_COMMUNITY}}` | openSource.communityPotential |
+| `{{PRICING_SCORE}}` | pricing.sensitivityScore |
+| `{{PRICING_ELASTICITY}}` | pricing.priceElasticity |
+| `{{PRICING_WTP}}` | pricing.willingnessToPay |
+| `{{FUNDRAISE_SCORE}}` | fundraising.readinessScore |
+| `{{FUNDRAISE_STAGE}}` | fundraising.recommendedStage |
+| `{{FUNDRAISE_ASK}}` | fundraising.estimatedAsk |
+| `{{FUNDRAISE_TIMELINE}}` | fundraising.timeline |
 
 **Verdict-dependent placeholders:**
 | Placeholder | Excellent | Strong | Promising | Risky | Weak |
@@ -208,6 +226,13 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 | `{{EXIT_ACQUIRER_DATA}}` | `[string]` |
 | `{{OPS_METRIC_DATA}}` | `[{label, value}]` |
 | `{{OPS_HURDLE_DATA}}` | `[{name, impact, desc}]` |
+| `{{ESG_FLAG_DATA}}` | `[{name, severity, desc}]` |
+| `{{ESG_REC_DATA}}` | `[string]` |
+| `{{FOUNDER_DIM_DATA}}` | `[{dim, score}]` |
+| `{{OS_RISK_DATA}}` | `[string]` |
+| `{{PRICING_TIER_DATA}}` | `[{name, pricePoint, targetSegment}]` |
+| `{{FUNDRAISE_STRENGTH_DATA}}` | `[string]` |
+| `{{FUNDRAISE_GAP_DATA}}` | `[string]` |
 
 **Score color mapping** (used by helper in template):
 - ≥ 75 → `#15803D`
@@ -285,8 +310,9 @@ Tell the user the file is ready and where it was saved.
 ## Module Icons & Labels
 
 | Module | Key | Icon | Label |
-|---|---|---|---|
+|---|---|---|---|---|
 | Executive Summary | executive | file-text | Exec |
+| Founder-Market Fit | founder | user-check | Founder |
 | Market Sizing | market | trending-up | Market |
 | Demand Signals | demand | activity | Demand |
 | Competitive Landscape | competitors | crosshair | Rivals |
@@ -295,9 +321,11 @@ Tell the user the file is ready and where it was saved.
 | SWOT | swot | layout-grid | SWOT |
 | Go-to-Market | gtm | rocket | GTM |
 | Monetisation | monetisation | dollar-sign | Revenue |
+| Pricing Sensitivity | pricing | tag | Pricing |
 | Risk Register | risks | shield-alert | Risks |
 | Competitive Moat | moat | shield | Moat |
 | Tech Stack | tech | cpu | Tech |
+| Open-Source Viability | openSource | github | OSS |
 | Operational Audit | ops | settings-2 | Ops |
 | Hiring Roadmap | hiring | briefcase | Hiring |
 | Ecosystem Strategy | ecosystem | git-branch | Eco |
@@ -305,6 +333,8 @@ Tell the user the file is ready and where it was saved.
 | Localization Fit | localization | globe | Local |
 | Accessibility | accessibility | accessibility | A11y |
 | Compliance Risk | compliance | scale | Comply |
+| Sustainability / ESG | esg | leaf | ESG |
+| Fundraising Readiness | fundraising | banknote | Fundraise |
 | Strategic Exit | exit | target | Exit |
 
 ---

@@ -17,7 +17,7 @@ Add the agent to your project's `opencode.json`:
 {
   "agent": {
     "prd-intelligence": {
-      "description": "Analyze PRDs across 20 strategic dimensions with HTML dashboard output",
+      "description": "Analyze PRDs across 25 strategic dimensions with HTML dashboard output",
       "mode": "subagent",
       "model": "anthropic/claude-sonnet-4-6",
       "permission": {
@@ -98,7 +98,7 @@ Create `CODEX.md` in your project root:
 # PRD Intelligence
 
 When I type /prd, read AGENTS.md from the prd-intelligence-skill directory
-and execute the full 20-module PRD analysis workflow.
+and execute the full 25-module PRD analysis workflow.
 ```
 
 Alternatively, add to `.codex/rules/prd.md`.
@@ -113,6 +113,8 @@ Just paste into your chat:
 Read AGENTS.md from the PRD Intelligence skill, then help me run /prd on the following:
 [paste PRD content]
 ```
+
+For a reusable platform-agnostic adapter, use `integrations/any-agent.md`.
 
 ---
 

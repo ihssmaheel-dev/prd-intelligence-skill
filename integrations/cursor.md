@@ -28,4 +28,4 @@ Once configured, just type:
 /prd analyze this: [paste PRD or file path]
 ```
 
-The agent will read AGENTS.md, execute the 20-module analysis, and save `prd-report.html`.
+The agent will read AGENTS.md, execute the 25-module analysis, and save `prd-report.html`.

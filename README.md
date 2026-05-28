@@ -1,6 +1,6 @@
 # PRD Intelligence
 
-> **Analyze any product idea across 20 strategic dimensions. Get a standalone HTML dashboard with scores, risks, market data, and strategic guidance. Works with any AI — Claude, ChatGPT, Gemini, Cursor, or any LLM.**
+> **Analyze any product idea across 25 strategic dimensions. Get a standalone HTML dashboard with scores, risks, market data, and strategic guidance. Works with any AI — Claude, ChatGPT, Gemini, Cursor, or any LLM.**
 
 ## Quickstart
 
@@ -24,10 +24,13 @@ A single self-contained HTML file with a bento grid dashboard showing:
 | **Viability** | Overall score ring, build decision (green/amber/red), verdict badge |
 | **Market** | TAM/SAM/SOM funnel, demand signals, buyer language keywords |
 | **Strategy** | SWOT grid, competitive landscape, white space, moat assessment |
-| **Product** | Feature-fit roadmap, tech stack, readiness radar |
+| **Product** | Feature-fit roadmap, tech stack, readiness, open-source viability |
+| **Pricing** | Pricing sensitivity, willingness to pay, tier strategy |
 | **Execution** | GTM phases and metrics, risk register, operational complexity |
-| **Business** | Unit economics, revenue model, hiring roadmap, ecosystem |
-| **Fit** | Localization, accessibility, compliance flags, exit potential |
+| **Business** | Unit economics, revenue model, hiring, ecosystem, fundraising readiness |
+| **Team** | Founder-market fit evaluation |
+| **Governance** | ESG assessment, compliance flags, accessibility |
+| **Exit** | Strategic exit, localization fit |
 
 Zero dependencies — the dashboard uses Tailwind CSS, Lucide icons, and Chart.js from CDN. Open it in any browser, no server needed.
 
@@ -36,16 +39,16 @@ Zero dependencies — the dashboard uses Tailwind CSS, Lucide icons, and Chart.j
 ## How It Works
 
 ```
-PRD → 20 module prompts (JSON-in, JSON-out) → template.html → prd-report.html
+PRD → 25 module prompts (JSON-in, JSON-out) → template.html → prd-report.html
 ```
 
-Each module is a self-contained LLM call: **system prompt + PRD + schema → JSON**. The 20 JSON outputs fill a static HTML template. If the concept is weak after Module 1, the analysis stops early with a warning banner.
+Each module is a self-contained LLM call: **system prompt + PRD + schema → JSON**. The 25 JSON outputs fill a static HTML template. If the concept is weak after Module 1, the analysis stops early with a warning banner.
 
 ### Stop Conditions
 
 - **Insufficient context** (<80 words, no problem/product signals) → partial report
 - **Weak viability** (score < 45, verdict "Weak") → partial report with stop banner
-- Otherwise → full 20-module dashboard
+- Otherwise → full 25-module dashboard
 
 ---
 
@@ -54,9 +57,9 @@ Each module is a self-contained LLM call: **system prompt + PRD + schema → JSO
 | File | Purpose |
 |---|---|
 | `AGENTS.md` | **Start here.** Single instruction file any AI agent reads to run `/prd` |
-| `PROMPTS.md` | All 20 system prompts, JSON schemas, score calibration, and retry logic |
+| `PROMPTS.md` | All 25 system prompts, JSON schemas, score calibration, and retry logic |
 | `WORKFLOW.md` | Step-by-step guide for running the analysis with any AI |
-| `INSTALL.md` | Platform-specific setup (opencode, Cursor, Claude, Copilot) |
+| `INSTALL.md` | Platform-specific setup (opencode, Cursor, Claude, Copilot, generic) |
 | `template.html` | Self-contained HTML dashboard with 37 scalar + 29 JSON array placeholders |
 | `validate.cjs` | Node.js schema validator for all 29 data arrays |
 | `test_gen.ps1` | PowerShell script to generate test dashboards |
@@ -69,8 +72,8 @@ Each module is a self-contained LLM call: **system prompt + PRD + schema → JSO
 
 The template uses two kinds of placeholders:
 
-- **Scalar** (`{{REPORT_TITLE}}`, `{{EXECUTIVE_SUMMARY}}`, etc.) — 37 direct text replacements
-- **JS data arrays** (`{{MODULE_DATA}}`, `{{COMPETITOR_DATA}}`, etc.) — 29 JSON arrays rendered at runtime
+- **Scalar** (`{{REPORT_TITLE}}`, `{{EXECUTIVE_SUMMARY}}`, etc.) — 53 direct text replacements
+- **JS data arrays** (`{{MODULE_DATA}}`, `{{COMPETITOR_DATA}}`, etc.) — 36 JSON arrays rendered at runtime
 
 See `WORKFLOW.md` for the full reference map.
 
@@ -105,6 +108,7 @@ Most ideas land below 70. Scores are intentionally harsh.
 | **Claude Code** | Copy `integrations/claude.md` into `CLAUDE.md` |
 | **GitHub Copilot** | Copy `integrations/copilot.md` into `.github/copilot-instructions.md` |
 | **OpenAI Codex CLI** | Copy `integrations/codex.md` into `CODEX.md` |
+| **Any Agentic Platform** | Copy `integrations/any-agent.md` into your rules/system prompt area |
 | **Any AI** | Paste AGENTS.md content into your system prompt |
 
 Detailed instructions: [`INSTALL.md`](./INSTALL.md)
@@ -115,7 +119,7 @@ Detailed instructions: [`INSTALL.md`](./INSTALL.md)
 
 - **Any LLM** that can follow structured JSON output instructions
 - A browser to open the HTML dashboard
-- ~20 LLM calls per full analysis (2-5 minutes)
+- ~25 LLM calls per full analysis (2-5 minutes)
 
 ---
 

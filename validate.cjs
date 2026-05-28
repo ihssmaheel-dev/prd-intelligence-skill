@@ -35,6 +35,13 @@ const schemas = {
   EXIT_ACQUIRER_DATA: { items: 'string' },
   OPS_METRIC_DATA: { items: { label: 'string', value: 'string', color: 'string|undefined', font: 'string|undefined' } },
   OPS_HURDLE_DATA: { items: { name: 'string', impact: 'enum(High|Medium|Low)', desc: 'string' } },
+  ESG_FLAG_DATA: { items: { name: 'string', severity: 'enum(High|Medium|Low)', desc: 'string' } },
+  ESG_REC_DATA: { items: 'string' },
+  FOUNDER_DIM_DATA: { items: { dim: 'string', score: 'number' } },
+  OS_RISK_DATA: { items: 'string' },
+  PRICING_TIER_DATA: { items: { name: 'string', pricePoint: 'string', targetSegment: 'string' } },
+  FUNDRAISE_STRENGTH_DATA: { items: 'string' },
+  FUNDRAISE_GAP_DATA: { items: 'string' },
 };
 
 // ===== VALIDATOR =====

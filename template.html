@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -379,7 +379,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     <span class="tag"><i data-lucide="building-2" style="width:11px;height:11px"></i>{{REPORT_INDUSTRY}}</span>
     <span class="tag"><i data-lucide="globe" style="width:11px;height:11px"></i>{{REPORT_GEOGRAPHY}}</span>
     <span class="tag"><i data-lucide="calendar" style="width:11px;height:11px"></i>{{REPORT_DATE}}</span>
-    <span class="tag"><i data-lucide="layers" style="width:11px;height:11px"></i>{{REPORT_SUCCESSFUL}}/20 modules</span>
+    <span class="tag"><i data-lucide="layers" style="width:11px;height:11px"></i>{{REPORT_SUCCESSFUL}}/25 modules</span>
   </div>
 
   <div style="display:flex;flex-direction:column;align-items:center;gap:20px;" class="a-si d5">
@@ -413,6 +413,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- EXECUTIVE SUMMARY — 6 cols -->
   <div class="card col-6 reveal">
     <div class="card-body">
@@ -427,6 +428,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- MODULE RADAR — 3 cols -->
   <div class="card col-3 reveal">
     <div class="card-head">
@@ -440,6 +442,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- HEATMAP — 3 cols -->
   <div class="card col-3 reveal">
     <div class="card-head">
@@ -452,6 +455,32 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;" id="heatmap-grid"></div>
     </div>
   </div>
+
+
+  <!-- FOUNDER-MARKET FIT — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--violet-light);border:1px solid #DDD6FE;">
+        <i data-lucide="user-check" style="width:13px;height:13px;color:var(--violet)"></i>
+      </div>
+      <span class="label">Founder Fit</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--violet);">{{FOUNDER_SCORE}}</span>
+        <span class="label">Overall</span>
+      </div>
+      <div id="founder-dims" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px;"></div>
+      <div style="background:var(--rose-light);border:1px solid var(--rose-mid);border-radius:8px;padding:10px;">
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px;">
+          <i data-lucide="alert-triangle" style="width:11px;height:11px;color:var(--rose)"></i>
+          <span class="label" style="color:var(--rose);">Critical Gap</span>
+        </div>
+        <p style="font-size:12px;color:var(--ink);line-height:1.5;">{{FOUNDER_GAP}}</p>
+      </div>
+    </div>
+  </div>
+
 
   <!-- MARKET FUNNEL — 4 cols -->
   <div class="card col-4 reveal">
@@ -473,6 +502,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- DEMAND SCORE + KEYWORDS — 2 cols -->
   <div class="card col-2 reveal">
     <div class="card-head">
@@ -489,6 +519,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- DEMAND SIGNALS — 4 cols -->
   <div class="card col-4 reveal">
     <div class="card-head">
@@ -499,6 +530,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
     <div class="card-body" id="demand-signals" style="display:flex;flex-direction:column;gap:8px;"></div>
   </div>
+
 
   <!-- COMPETITIVE — 2 cols (taller) -->
   <div class="card col-2 row-2 reveal">
@@ -516,6 +548,19 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
       </div>
     </div>
   </div>
+
+
+  <!-- PERSONAS — 4 cols -->
+  <div class="card col-4 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:#ECFEFF;border:1px solid #A5F3FC;">
+        <i data-lucide="users" style="width:13px;height:13px;color:#0891B2"></i>
+      </div>
+      <span class="label">Personas</span>
+    </div>
+    <div class="card-body" id="persona-cards" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+
 
   <!-- FEATURES — 4 cols -->
   <div class="card col-4 reveal">
@@ -542,6 +587,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- SWOT — 6 cols -->
   <div class="card col-6 reveal">
     <div class="card-head">
@@ -555,16 +601,18 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
-  <!-- PERSONAS — 4 cols -->
-  <div class="card col-4 reveal">
+
+  <!-- GTM PHASES — 3 cols -->
+  <div class="card col-3 reveal">
     <div class="card-head">
-      <div class="icon-box" style="background:#ECFEFF;border:1px solid #A5F3FC;">
-        <i data-lucide="users" style="width:13px;height:13px;color:#0891B2"></i>
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="rocket" style="width:13px;height:13px;color:var(--amber)"></i>
       </div>
-      <span class="label">Personas</span>
+      <span class="label">GTM Phases</span>
     </div>
-    <div class="card-body" id="persona-cards" style="display:flex;flex-direction:column;gap:10px;"></div>
+    <div class="card-body" id="gtm-phases" style="display:flex;flex-direction:column;gap:8px;"></div>
   </div>
+
 
   <!-- GTM METRICS — 2 cols -->
   <div class="card col-2 reveal">
@@ -579,16 +627,6 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
-  <!-- GTM PHASES — 3 cols -->
-  <div class="card col-3 reveal">
-    <div class="card-head">
-      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
-        <i data-lucide="rocket" style="width:13px;height:13px;color:var(--amber)"></i>
-      </div>
-      <span class="label">GTM Phases</span>
-    </div>
-    <div class="card-body" id="gtm-phases" style="display:flex;flex-direction:column;gap:8px;"></div>
-  </div>
 
   <!-- MONETISATION — 3 cols -->
   <div class="card col-3 reveal">
@@ -605,6 +643,33 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
+  <!-- PRICING SENSITIVITY — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--amber-light);border:1px solid var(--amber-mid);">
+        <i data-lucide="tag" style="width:13px;height:13px;color:var(--amber)"></i>
+      </div>
+      <span class="label">Pricing</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--amber);">{{PRICING_SCORE}}</span>
+        <span class="label">Sensitivity</span>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:8px;">
+        <span class="label" style="display:block;margin-bottom:2px;">Elasticity</span>
+        <p style="font-size:11px;color:var(--ink);line-height:1.5;">{{PRICING_ELASTICITY}}</p>
+        <div class="rule" style="margin:8px 0;"></div>
+        <span class="label" style="display:block;margin-bottom:2px;">Willingness to Pay</span>
+        <p style="font-size:11px;color:var(--ink);line-height:1.5;">{{PRICING_WTP}}</p>
+      </div>
+      <p class="label" style="margin-bottom:5px;">Tiers</p>
+      <div id="pricing-tiers" style="display:flex;flex-direction:column;gap:5px;"></div>
+    </div>
+  </div>
+
+
   <!-- RISKS — 4 cols -->
   <div class="card col-4 reveal">
     <div class="card-head">
@@ -615,6 +680,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
     <div class="card-body" id="risk-list" style="display:flex;flex-direction:column;gap:10px;"></div>
   </div>
+
 
   <!-- MOAT — 2 cols -->
   <div class="card col-2 reveal">
@@ -641,6 +707,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- TECH STACK — 2 cols -->
   <div class="card col-2 reveal">
     <div class="card-head">
@@ -658,6 +725,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- READINESS — 2 cols -->
   <div class="card col-2 reveal">
     <div class="card-head">
@@ -670,6 +738,46 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
       <div id="tech-readiness" style="display:flex;flex-direction:column;gap:7px;"></div>
     </div>
   </div>
+
+
+  <!-- OPEN-SOURCE VIABILITY — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:#ECFEFF;border:1px solid #A5F3FC;">
+        <i data-lucide="github" style="width:13px;height:13px;color:#0891B2"></i>
+      </div>
+      <span class="label">Open Source</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#0891B2;">{{OS_SCORE}}</span>
+        <span class="label">Viability</span>
+        <span id="os-model-pill" style="display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:700;background:var(--amber-light);color:var(--amber);border:1px solid var(--amber-mid);">{{OS_MODEL}}</span>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;margin-bottom:10px;">
+        <span class="label" style="display:block;margin-bottom:3px;">Community</span>
+        <p style="font-size:12px;color:var(--ink);line-height:1.5;">{{OS_COMMUNITY}}</p>
+      </div>
+      <p class="label" style="margin-bottom:5px;">Model Risks</p>
+      <ul id="os-risks" style="list-style:none;display:flex;flex-direction:column;gap:4px;"></ul>
+    </div>
+  </div>
+
+
+  <!-- OPS — 6 cols -->
+  <div class="card col-6 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--surface2);border:1px solid var(--border);">
+        <i data-lucide="settings-2" style="width:13px;height:13px;color:var(--ink2)"></i>
+      </div>
+      <span class="label">Operational Complexity</span>
+    </div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;" id="ops-metrics"></div>
+      <div id="ops-hurdles" style="display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+
 
   <!-- HIRING — 3 cols -->
   <div class="card col-3 reveal">
@@ -693,6 +801,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- ECOSYSTEM — 3 cols -->
   <div class="card col-3 reveal">
     <div class="card-head">
@@ -713,6 +822,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- UNIT ECONOMICS — 3 cols -->
   <div class="card col-3 reveal">
     <div class="card-head">
@@ -725,6 +835,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
       <div id="econ-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;"></div>
     </div>
   </div>
+
 
   <!-- LOCALIZATION — 3 cols -->
   <div class="card col-3 reveal">
@@ -753,6 +864,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- ACCESSIBILITY — 2 cols -->
   <div class="card col-2 reveal">
     <div class="card-head">
@@ -773,6 +885,7 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
+
   <!-- COMPLIANCE — 2 cols -->
   <div class="card col-2 reveal">
     <div class="card-head">
@@ -792,6 +905,66 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
       <ul id="compliance-next-steps" style="list-style:none;display:flex;flex-direction:column;gap:5px;"></ul>
     </div>
   </div>
+
+
+  <!-- ESG ASSESSMENT — 3 cols -->
+  <div class="card col-3 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--green-light);border:1px solid var(--green-mid);">
+        <i data-lucide="leaf" style="width:13px;height:13px;color:var(--green)"></i>
+      </div>
+      <span class="label">ESG</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--green);">{{ESG_SCORE}}</span>
+        <span class="label">Overall</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;" id="esg-subscores">
+        <div class="stat-box"><span class="label">Env</span><span class="stat-val" style="font-size:14px;font-family:'JetBrains Mono',monospace;">{{ESG_ENV}}</span></div>
+        <div class="stat-box"><span class="label">Social</span><span class="stat-val" style="font-size:14px;font-family:'JetBrains Mono',monospace;">{{ESG_SOCIAL}}</span></div>
+        <div class="stat-box"><span class="label">Gov</span><span class="stat-val" style="font-size:14px;font-family:'JetBrains Mono',monospace;">{{ESG_GOV}}</span></div>
+      </div>
+      <p class="label" style="margin-bottom:5px;">Flags</p>
+      <div id="esg-flags" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
+      <p class="label" style="margin-bottom:5px;">Recommendations</p>
+      <ul id="esg-recs" style="list-style:none;display:flex;flex-direction:column;gap:4px;"></ul>
+    </div>
+  </div>
+
+
+  <!-- FUNDRAISING READINESS — 2 cols -->
+  <div class="card col-2 reveal">
+    <div class="card-head">
+      <div class="icon-box" style="background:var(--rose-light);border:1px solid var(--rose-mid);">
+        <i data-lucide="banknote" style="width:13px;height:13px;color:var(--rose)"></i>
+      </div>
+      <span class="label">Fundraise</span>
+    </div>
+    <div class="card-body">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--rose);">{{FUNDRAISE_SCORE}}</span>
+        <span class="label">Readiness</span>
+        <span id="fundraise-stage-pill" style="display:inline-block;padding:2px 10px;border-radius:999px;font-size:10px;font-weight:700;background:var(--violet-light);color:var(--violet);border:1px solid #DDD6FE;">{{FUNDRAISE_STAGE}}</span>
+      </div>
+      <div class="stat-box" style="margin-bottom:10px;">
+        <span class="label">Estimated Ask</span>
+        <span class="stat-val" style="font-size:15px;font-family:'DM Sans',sans-serif;font-weight:600;">{{FUNDRAISE_ASK}}</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <div style="flex:1;background:var(--green-light);border:1px solid var(--green-mid);border-radius:8px;padding:8px;">
+          <span class="label" style="color:var(--green);display:block;margin-bottom:4px;">Strengths</span>
+          <ul id="fundraise-strengths" style="list-style:none;display:flex;flex-direction:column;gap:3px;"></ul>
+        </div>
+        <div style="flex:1;background:var(--rose-light);border:1px solid var(--rose-mid);border-radius:8px;padding:8px;">
+          <span class="label" style="color:var(--rose);display:block;margin-bottom:4px;">Gaps</span>
+          <ul id="fundraise-gaps" style="list-style:none;display:flex;flex-direction:column;gap:3px;"></ul>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:4px;"><i data-lucide="clock" style="width:10px;height:10px;"></i>{{FUNDRAISE_TIMELINE}}</p>
+    </div>
+  </div>
+
 
   <!-- EXIT — 2 cols -->
   <div class="card col-2 reveal">
@@ -815,19 +988,6 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
     </div>
   </div>
 
-  <!-- OPS — 6 cols -->
-  <div class="card col-6 reveal">
-    <div class="card-head">
-      <div class="icon-box" style="background:var(--surface2);border:1px solid var(--border);">
-        <i data-lucide="settings-2" style="width:13px;height:13px;color:var(--ink2)"></i>
-      </div>
-      <span class="label">Operational Complexity</span>
-    </div>
-    <div class="card-body">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px;" id="ops-metrics"></div>
-      <div id="ops-hurdles" style="display:flex;flex-direction:column;gap:8px;"></div>
-    </div>
-  </div>
 
   <!-- FOOTER — 6 cols -->
   <footer class="col-6" style="text-align:center;padding:32px 0 16px;border-top:1px solid var(--border);margin-top:8px;" class="reveal">
@@ -835,8 +995,9 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
       <i data-lucide="sparkles" style="width:13px;height:13px;color:var(--ink3)"></i>
       <span style="font-size:12px;color:var(--ink2);">Generated by <strong style="color:var(--ink);font-family:'Syne',sans-serif;">PRD Intelligence</strong></span>
     </div>
-    <p style="font-size:11px;color:var(--ink3);">{{REPORT_DATE}} &nbsp;&middot;&nbsp; {{REPORT_SUCCESSFUL}}/20 modules &nbsp;&middot;&nbsp; {{REPORT_TITLE}}</p>
+    <p style="font-size:11px;color:var(--ink3);">{{REPORT_DATE}} &nbsp;&middot;&nbsp; {{REPORT_SUCCESSFUL}}/25 modules &nbsp;&middot;&nbsp; {{REPORT_TITLE}}</p>
   </footer>
+
 
 </div><!-- /bento -->
 
@@ -871,6 +1032,13 @@ const COMPLIANCE_NEXT_DATA = {{COMPLIANCE_NEXT_DATA}};
 const EXIT_ACQUIRER_DATA = {{EXIT_ACQUIRER_DATA}};
 const OPS_METRIC_DATA = {{OPS_METRIC_DATA}};
 const OPS_HURDLE_DATA = {{OPS_HURDLE_DATA}};
+const ESG_FLAG_DATA = {{ESG_FLAG_DATA}};
+const ESG_REC_DATA = {{ESG_REC_DATA}};
+const FOUNDER_DIM_DATA = {{FOUNDER_DIM_DATA}};
+const OS_RISK_DATA = {{OS_RISK_DATA}};
+const PRICING_TIER_DATA = {{PRICING_TIER_DATA}};
+const FUNDRAISE_STRENGTH_DATA = {{FUNDRAISE_STRENGTH_DATA}};
+const FUNDRAISE_GAP_DATA = {{FUNDRAISE_GAP_DATA}};
 
 // ===== DARK MODE =====
 function toggleDark() {
@@ -1228,6 +1396,58 @@ function bOpsHurdles() {
   }).join('');
 }
 
+// ===== NEW MODULE BUILDERS =====
+function bEsgFlags() {
+  var el = document.getElementById('esg-flags');
+  if (!el||!ESG_FLAG_DATA) return;
+  el.innerHTML = ESG_FLAG_DATA.map(function(f){
+    var tc = tt(f.severity);
+    return '<div class="trow" style="flex-direction:column;gap:4px;"><div style="display:flex;align-items:center;justify-content:space-between;">'+
+      '<strong style="font-size:11px;color:var(--ink);">'+f.name+'</strong>'+
+      '<span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;" class="'+tc+'">'+f.severity+'</span></div>'+
+      '<p style="font-size:10px;color:var(--ink2);">'+f.desc+'</p></div>';
+  }).join('');
+}
+function bEsgRecs() {
+  var el = document.getElementById('esg-recs');
+  if (!el) return;
+  el.innerHTML = ESG_REC_DATA.map(function(r){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="check-circle" style="width:11px;height:11px;color:var(--green);flex-shrink:0;margin-top:2px;"></i>'+r+'</li>';}).join('');
+}
+function bFounderDims() {
+  var el = document.getElementById('founder-dims');
+  if (!el||!FOUNDER_DIM_DATA) return;
+  el.innerHTML = FOUNDER_DIM_DATA.map(function(d){
+    var c = sc(d.score);
+    return '<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:'+cv('--ink2')+';width:80px;flex-shrink:0;">'+d.dim+'</span>'+
+      '<div style="flex:1;"><div class="prog-track"><div class="prog-fill" style="width:'+d.score+'%;background:'+c+';"></div></div></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:10px;font-weight:700;color:'+c+';width:18px;text-align:right;">'+d.score+'</span></div>';
+  }).join('');
+}
+function bOsRisks() {
+  var el = document.getElementById('os-risks');
+  if (!el) return;
+  el.innerHTML = OS_RISK_DATA.map(function(r){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="alert-triangle" style="width:11px;height:11px;color:var(--amber);flex-shrink:0;margin-top:2px;"></i>'+r+'</li>';}).join('');
+}
+function bPricingTiers() {
+  var el = document.getElementById('pricing-tiers');
+  if (!el||!PRICING_TIER_DATA) return;
+  el.innerHTML = PRICING_TIER_DATA.map(function(t){
+    return '<div class="trow"><div style="flex:1;min-width:0;"><strong style="font-size:12px;color:var(--ink);">'+t.name+'</strong>'+
+      '<p style="font-size:10px;color:var(--ink3);margin-top:1px;">'+t.targetSegment+'</p></div>'+
+      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:700;color:var(--ink);">'+t.pricePoint+'</span></div>';
+  }).join('');
+}
+function bFundraiseStrengths() {
+  var el = document.getElementById('fundraise-strengths');
+  if (!el) return;
+  el.innerHTML = FUNDRAISE_STRENGTH_DATA.map(function(s){return '<li style="font-size:10px;color:var(--green);display:flex;gap:4px;"><i data-lucide="plus" style="width:10px;height:10px;flex-shrink:0;margin-top:2px;"></i>'+s+'</li>';}).join('');
+}
+function bFundraiseGaps() {
+  var el = document.getElementById('fundraise-gaps');
+  if (!el) return;
+  el.innerHTML = FUNDRAISE_GAP_DATA.map(function(g){return '<li style="font-size:10px;color:var(--rose);display:flex;gap:4px;"><i data-lucide="minus" style="width:10px;height:10px;flex-shrink:0;margin-top:2px;"></i>'+g+'</li>';}).join('');
+}
+
 // ===== INIT =====
 (function init(){
   bHeatmap(); bRadar(); bMarketFunnel(); bDemandScores(); bDemandSignals(); bDemandKeywords();
@@ -1235,6 +1455,7 @@ function bOpsHurdles() {
   bMonetisation(); bMonetisationMetrics(); bRisks(); bMoat(); bTechStack(); bReadiness();
   bHiring(); bEcosystem(); bEcon(); bLocalNuances(); bLocalCompetitors();
   bA11y(); bComplianceFlags(); bComplianceNext(); bExitAcquirers(); bOpsMetrics(); bOpsHurdles();
+  bEsgFlags(); bEsgRecs(); bFounderDims(); bOsRisks(); bPricingTiers(); bFundraiseStrengths(); bFundraiseGaps();
 
   // Empty-state fallbacks for modules that produced no data
   emptyMsg('demand-signals'); emptyMsg('demand-keywords'); emptyMsg('competitor-list');
@@ -1246,6 +1467,9 @@ function bOpsHurdles() {
   emptyMsg('local-competitors'); emptyMsg('accessibility-gaps'); emptyMsg('accessibility-rec');
   emptyMsg('compliance-flags'); emptyMsg('compliance-next-steps'); emptyMsg('exit-acquirers');
   emptyMsg('ops-metrics'); emptyMsg('ops-hurdles'); emptyMsg('market-funnel');
+  emptyMsg('esg-flags'); emptyMsg('esg-recs'); emptyMsg('founder-dims');
+  emptyMsg('os-risks'); emptyMsg('pricing-tiers');
+  emptyMsg('fundraise-strengths'); emptyMsg('fundraise-gaps');
 
   if (typeof lucide !== 'undefined' && lucide.createIcons) { lucide.createIcons(); }
 

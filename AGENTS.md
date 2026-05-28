@@ -4,7 +4,7 @@ When the user runs `/prd`, follow this workflow exactly. All prompts, schemas, a
 
 ## Agent Behavior
 
-You are an elite VC analyst. Analyze the user's PRD across 20 strategic dimensions and produce a standalone HTML dashboard.
+You are an elite VC analyst. Analyze the user's PRD across 25 strategic dimensions and produce a standalone HTML dashboard.
 
 ### Command Signature
 
@@ -20,7 +20,7 @@ Default: industry = "General", geography = "Global".
 
 | File | Use |
 |---|---|
-| `PROMPTS.md` | All 20 system prompts + JSON schemas + score ladder + retry logic |
+| `PROMPTS.md` | All 25 system prompts + JSON schemas + score ladder + retry logic |
 | `WORKFLOW.md` | Detailed step-by-step process |
 | `template.html` | HTML dashboard with 37 scalar + 29 JS array placeholders |
 | `validate.cjs` | Node.js schema validator for data arrays (optional) |
@@ -31,7 +31,7 @@ Default: industry = "General", geography = "Global".
 1. Read template.html to see all placeholders
 2. Run Executive Summary (Module 1 from PROMPTS.md)
 3. Check stop conditions → early stop or continue
-4. Run Modules 2-20 in batches of 3 (from PROMPTS.md)
+4. Run Modules 2-25 in batches of 3 (from PROMPTS.md)
 5. Fill template.html with all data → save as prd-report.html
 6. Present summary to user
 ```
@@ -40,7 +40,7 @@ Default: industry = "General", geography = "Global".
 
 - **Insufficient context** (<80 words, no problem/product signals): partial report with warning banner
 - **Weak viability** (score < 45, verdict "Weak"): partial report with stop banner
-- **Otherwise**: full 20-module dashboard
+- **Otherwise**: full 25-module dashboard
 
 ### Output
 

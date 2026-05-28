@@ -9,7 +9,7 @@ Create `CLAUDE.md` in your project root:
 
 When I type /prd followed by a PRD description, file path, or URL:
 1. Read AGENTS.md from the prd-intelligence-skill directory
-2. Execute the full 20-module PRD analysis workflow
+2. Execute the full 25-module PRD analysis workflow
 3. Save the result as prd-report.html
 4. Show me a summary
 

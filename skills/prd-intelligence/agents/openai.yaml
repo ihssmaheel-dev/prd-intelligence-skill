@@ -1,0 +1,4 @@
+interface:
+  display_name: "PRD Intelligence"
+  short_description: "Score PRDs and generate a strategic HTML dashboard"
+  default_prompt: "Use $prd-intelligence to run /prd on this product concept and generate prd-report.html."
