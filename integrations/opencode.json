@@ -1,7 +1,7 @@
 {
   "agent": {
     "prd-intelligence": {
-      "description": "Analyze PRDs across 20 strategic dimensions with HTML dashboard output",
+      "description": "Analyze PRDs across 25 strategic dimensions with HTML dashboard output",
       "mode": "subagent",
       "model": "anthropic/claude-sonnet-4-6",
       "permission": {
@@ -17,7 +17,7 @@
   "command": {
     "prd": {
       "description": "Full PRD intelligence analysis with HTML dashboard",
-      "template": "Read AGENTS.md and run the full PRD intelligence analysis on {{input}}. Save the dashboard as prd-report.html."
+      "template": "Read AGENTS.md and run the full PRD intelligence analysis on {{input}}. Save the dashboard to reports/ with versioned naming."
     }
   }
 }

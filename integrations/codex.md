@@ -10,7 +10,7 @@ Create `CODEX.md` in your project root:
 ```markdown
 # PRD Intelligence
 
-When I type /prd, read AGENTS.md from the prd-intelligence-skill directory and execute the full 25-module PRD analysis workflow. Use PROMPTS.md for all prompts and schemas, WORKFLOW.md for the process, and template.html for the dashboard. Save the result as prd-report.html.
+When I type /prd, read AGENTS.md from the prd-intelligence-skill directory and execute the full 25-module PRD analysis workflow. Use PROMPTS.md for all prompts and schemas, WORKFLOW.md for the process, and template.html for the dashboard. Save the result in reports/ with versioned naming.
 ```
 
 ## Option B: .codex/rules/
@@ -18,7 +18,7 @@ When I type /prd, read AGENTS.md from the prd-intelligence-skill directory and e
 Create `.codex/rules/prd.md`:
 
 ```markdown
-/prd - Run PRD intelligence analysis. Read AGENTS.md and execute the full workflow. Save as prd-report.html.
+/prd - Run PRD intelligence analysis. Read AGENTS.md and execute the full workflow. Save to reports/ with versioned naming.
 ```
 
 ## Option C: Install Local Skill

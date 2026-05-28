@@ -381,8 +381,8 @@ foreach ($key in $allReplacements.Keys) {
   $template = $template.Replace($key, $allReplacements[$key])
 }
 
-$outputPath = "$PSScriptRoot\examples\prd-report.html"
-if (-not (Test-Path "$PSScriptRoot\examples")) { New-Item -ItemType Directory -Path "$PSScriptRoot\examples" -Force | Out-Null }
+$outputPath = "$PSScriptRoot\reports\test-report.html"
+if (-not (Test-Path "$PSScriptRoot\reports")) { New-Item -ItemType Directory -Path "$PSScriptRoot\reports" -Force | Out-Null }
 $template | Set-Content -Path $outputPath -NoNewline
 
 Write-Host "Dashboard written to: $outputPath"

@@ -28,7 +28,7 @@ Execution requirements:
 - Run Executive Summary first, then stop checks, then remaining modules in batches.
 - Return only raw JSON from each module call (no markdown/prose wrappers).
 - Replace every placeholder in template.html.
-- Save output as prd-report.html in current working directory.
+- Save output to `reports/` with versioned naming (sanitize project title from exec summary, use `-v1`, `-v2` if file exists)
 - Print terminal summary with title, verdict, score, build decision, top modules, suggestions, and file path.
 ```
 
@@ -59,7 +59,7 @@ Example:
 /prd A B2B SaaS product that helps customer success teams detect churn risk early...
 ```
 
-Expected output file: `prd-report.html`
+Expected output: `reports/{project-name}.html` (versioned if exists)
 
 ---
 

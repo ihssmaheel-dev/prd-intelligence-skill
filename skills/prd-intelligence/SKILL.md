@@ -37,7 +37,7 @@ Follow this sequence:
 3. Evaluate stop conditions.
 4. If continuing, run Modules 2-25 in batches of 3.
 5. Fill all scalar and array placeholders in `template.html`.
-6. Save final output as `prd-report.html` in the working directory.
+6. Save final output using versioned naming: sanitize project title from exec summary, create `reports/` directory, save as `reports/<project-name>.html` (use `-v1`, `-v2` if file exists).
 7. Print a concise terminal summary with title, verdict, score, build decision, top modules, suggestions, and file path.
 
 ## Apply Stop Conditions

@@ -116,7 +116,12 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 1. Read `template.html`
 2. Replace every scalar placeholder using the placeholder reference map (see below)
 3. Write each JS data array placeholder as a JSON array
-4. Save the completed file as `prd-report.html`
+4. Determine the output path using versioned naming:
+   - Extract project name from `executive.title`, sanitize (lowercase, replace spaces/special chars with hyphens)
+   - Create `reports/` directory if it doesn't exist
+   - Base path: `reports/<project-name>.html`
+   - If file exists, append `-v1`, `-v2`, etc. (lowest available version)
+5. Save the completed HTML to that path
 
 **Scalar placeholders (replace directly):**
 | Placeholder | Source |
@@ -300,7 +305,7 @@ CAGR: {value} | Maturity: {value}
 Failed modules: {failed_modules_list}
 
 -- Dashboard --
-HTML report written to: prd-report.html
+HTML report written to: reports/{project-name}.html
 ```
 
 Tell the user the file is ready and where it was saved.

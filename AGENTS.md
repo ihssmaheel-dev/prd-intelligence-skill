@@ -32,7 +32,7 @@ Default: industry = "General", geography = "Global".
 2. Run Executive Summary (Module 1 from PROMPTS.md)
 3. Check stop conditions → early stop or continue
 4. Run Modules 2-25 in batches of 3 (from PROMPTS.md)
-5. Fill template.html with all data → save as prd-report.html
+5. Fill template.html with all data → save to reports/ directory with versioned filename
 6. Present summary to user
 ```
 
@@ -44,7 +44,15 @@ Default: industry = "General", geography = "Global".
 
 ### Output
 
-Save the completed HTML as `prd-report.html` in the current working directory. Present a clean terminal summary (title, verdict, score, build decision, top modules, suggestions, file path).
+Save the completed HTML using versioned naming:
+
+1. Extract the project name from `executive.title` and sanitize it (lowercase, replace spaces/special chars with hyphens)
+2. Create a `reports/` directory in the current working directory (if it doesn't exist)
+3. Set base path as `reports/<project-name>.html`
+4. If the file already exists, increment a version number: `<project-name>-v1.html`, `<project-name>-v2.html`, etc. (use the lowest available version)
+5. Save the completed HTML to that path
+
+Present a clean terminal summary (title, verdict, score, build decision, top modules, suggestions, file path).
 
 ### Critical Rules
 

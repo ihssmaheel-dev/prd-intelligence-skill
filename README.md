@@ -8,7 +8,7 @@
 1. Clone → cd prd-intelligence-skill
 2. Wire it into your platform (see INSTALL.md — 30 seconds)
 3. Type /prd <your PRD>
-4. Open prd-report.html in any browser
+4. Open `reports/<project-name>.html` in any browser
 ```
 
 Full walkthrough: [`WORKFLOW.md`](./WORKFLOW.md) | All prompts: [`PROMPTS.md`](./PROMPTS.md) | Setup per platform: [`INSTALL.md`](./INSTALL.md)
@@ -39,7 +39,7 @@ Zero dependencies — the dashboard uses Tailwind CSS, Lucide icons, and Chart.j
 ## How It Works
 
 ```
-PRD → 25 module prompts (JSON-in, JSON-out) → template.html → prd-report.html
+PRD → 25 module prompts (JSON-in, JSON-out) → template.html → reports/ output
 ```
 
 Each module is a self-contained LLM call: **system prompt + PRD + schema → JSON**. The 25 JSON outputs fill a static HTML template. If the concept is weak after Module 1, the analysis stops early with a warning banner.
@@ -60,11 +60,11 @@ Each module is a self-contained LLM call: **system prompt + PRD + schema → JSO
 | `PROMPTS.md` | All 25 system prompts, JSON schemas, score calibration, and retry logic |
 | `WORKFLOW.md` | Step-by-step guide for running the analysis with any AI |
 | `INSTALL.md` | Platform-specific setup (opencode, Cursor, Claude, Copilot, generic) |
-| `template.html` | Self-contained HTML dashboard with 37 scalar + 29 JSON array placeholders |
+| `template.html` | Self-contained HTML dashboard with 53 scalar + 36 JSON array placeholders |
 | `validate.cjs` | Node.js schema validator for all 29 data arrays |
 | `test_gen.ps1` | PowerShell script to generate test dashboards |
 | `integrations/`  | Pre-built config files for each platform |
-| `examples/prd-report.html` | Generated report example |
+| `reports/` | Generated report output directory (versioned naming) |
 
 ---
 

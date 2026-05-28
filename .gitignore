@@ -1,5 +1,6 @@
 node_modules/
 prd-report.html
 examples/prd-report.html
+reports/
 .DS_Store
 Thumbs.db
