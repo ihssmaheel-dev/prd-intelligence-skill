@@ -114,14 +114,48 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 ### Step 6: Generate the HTML Dashboard
 
 1. Read `template.html`
-2. Replace every scalar placeholder using the placeholder reference map (see below)
-3. Write each JS data array placeholder as a JSON array
-4. Determine the output path using versioned naming:
+2. Replace every scalar placeholder using the placeholder reference map (see below) — use `replaceAll`
+3. Write each JS data array placeholder as a JSON array (use `JSON.stringify` for exact serialization)
+4. Determine the output folder using versioned naming:
    - Extract project name from `executive.title`, sanitize (lowercase, replace spaces/special chars with hyphens)
    - Create `reports/` directory if it doesn't exist
-   - Base path: `reports/<project-name>.html`
-   - If file exists, append `-v1`, `-v2`, etc. (lowest available version)
-5. Save the completed HTML to that path
+   - Base folder: `reports/<project-name>/`
+   - If folder exists, append version: `<project-name>-v1/`, `<project-name>-v2/`, etc.
+5. Save the filled HTML as `index.html` inside the folder
+6. Build and save `data.json` alongside it — must contain:
+   ```json
+   {
+     "meta": { "title": "...", "tagline": "...", "date": "...", "industry": "...", "geography": "..." },
+     "executive": { ... },
+     "founder": { ... },
+     "market": { ... },
+     "demand": { ... },
+     "competitors": { ... },
+     "features": { ... },
+     "swot": { ... },
+     "personas": { ... },
+     "gtm": { ... },
+     "monetisation": { ... },
+     "pricing": { ... },
+     "risks": { ... },
+     "moat": { ... },
+     "tech": { ... },
+     "openSource": { ... },
+     "ops": { ... },
+     "hiring": { ... },
+     "ecosystem": { ... },
+     "economics": { ... },
+     "localization": { ... },
+     "accessibility": { ... },
+     "compliance": { ... },
+     "esg": { ... },
+     "fundraising": { ... },
+     "exit": { ... }
+   }
+   ```
+7. Open the browser:
+   - Windows: `start "" "reports/<project-name>/index.html"`
+   - macOS: `open "reports/<project-name>/index.html"`
 
 **Scalar placeholders (replace directly):**
 | Placeholder | Source |
@@ -305,7 +339,7 @@ CAGR: {value} | Maturity: {value}
 Failed modules: {failed_modules_list}
 
 -- Dashboard --
-HTML report written to: reports/{project-name}.html
+HTML report written to: reports/{project-name}/index.html
 ```
 
 Tell the user the file is ready and where it was saved.

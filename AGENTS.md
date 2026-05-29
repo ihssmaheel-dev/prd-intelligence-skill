@@ -32,7 +32,7 @@ Default: industry = "General", geography = "Global".
 2. Run Executive Summary (Module 1 from PROMPTS.md)
 3. Check stop conditions → early stop or continue
 4. Run Modules 2-25 in batches of 3 (from PROMPTS.md)
-5. Fill template.html with all data → save to reports/ directory with versioned filename
+5. Fill template.html: replace every {{PLACEHOLDER}} with data, then save index.html + data.json to reports/<project-name>/ folder, open browser
 6. Present summary to user
 ```
 
@@ -44,13 +44,20 @@ Default: industry = "General", geography = "Global".
 
 ### Output
 
-Save the completed HTML using versioned naming:
+Save the completed report using versioned folder naming:
 
 1. Extract the project name from `executive.title` and sanitize it (lowercase, replace spaces/special chars with hyphens)
 2. Create a `reports/` directory in the current working directory (if it doesn't exist)
-3. Set base path as `reports/<project-name>.html`
-4. If the file already exists, increment a version number: `<project-name>-v1.html`, `<project-name>-v2.html`, etc. (use the lowest available version)
-5. Save the completed HTML to that path
+3. Set base folder as `reports/<project-name>/`
+4. If the folder already exists, increment a version number: `<project-name>-v1/`, `<project-name>-v2/`, etc. (use the lowest available version)
+5. Read `template.html`, then replace **every** `{{PLACEHOLDER}}`:
+   - **Scalars** (37+): single-value replacements like `{{REPORT_TITLE}}`, `{{EXECUTIVE_SUMMARY}}`, verdict-dependent, build-decision-dependent (see WORKFLOW.md for full map)
+   - **JS data arrays** (29): JSON-serialized arrays like `{{MODULE_DATA}}`, `{{DEMAND_DATA}}`, etc. Each must be valid JSON with the exact shape in WORKFLOW.md
+6. Save the filled HTML as `index.html` inside the folder
+7. Build a `data.json` file containing all module data objects (executive, founder, market, demand, competitors, features, swot, personas, gtm, monetisation, pricing, risks, moat, tech, openSource, ops, hiring, ecosystem, economics, localization, accessibility, compliance, esg, fundraising, exit) with a `meta` field (title, tagline, date, industry, geography)
+8. Open the browser to show the report:
+   - Windows: `start "" "reports/<project-name>/index.html"`
+   - macOS: `open "reports/<project-name>/index.html"`
 
 Present a clean terminal summary (title, verdict, score, build decision, top modules, suggestions, file path).
 
