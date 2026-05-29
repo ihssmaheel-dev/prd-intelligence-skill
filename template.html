@@ -316,6 +316,11 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.v-excellent { background: var(--green-light); border-color: var(--green-mid); }
+.v-strong    { background: var(--blue-light); border-color: var(--blue-mid); }
+.v-promising { background: var(--amber-light); border-color: var(--amber-mid); }
+.v-risky     { background: var(--rose-light); border-color: var(--rose-mid); }
+.v-weak      { background: var(--surface2); border-color: var(--border); }
 
 /* Heatmap tile */
 .htile {
@@ -1111,7 +1116,7 @@ function sc2(s) { var l=(s||'').toLowerCase(); return l==='strong'?'b-s':l==='mo
 function emptyMsg(containerId) {
   var el = document.getElementById(containerId);
   if (!el) return;
-  if (el.children.length === 0 || (el.children.length === 1 && el.children[0].tagName === 'P' && el.children[0].className === 'empty-state')) return;
+  if (el.children.length > 0) return;
   if (el.querySelector('.empty-state')) return;
   el.innerHTML = '<p class="empty-state" style="font-size:12px;color:'+cv('--ink3')+';text-align:center;padding:24px 0;display:flex;flex-direction:column;align-items:center;gap:6px;">'+
     '<i data-lucide="eye-off" style="width:18px;height:18px;opacity:0.5;"></i>'+
@@ -1121,7 +1126,7 @@ function emptyMsg(containerId) {
 // ===== BUILDERS =====
 function bHeatmap() {
   var g = document.getElementById('heatmap-grid');
-  if (!g) return;
+  if (!g||!MODULE_DATA) return;
   MODULE_DATA.forEach(function(m){
     var s=m.score, c=sc(s), bg=sbg(s);
     var d=document.createElement('div'); d.className='htile';
@@ -1137,7 +1142,7 @@ function bHeatmap() {
 }
 function bRadar() {
   var canvas = document.getElementById('radarChart');
-  if (!canvas) return;
+  if (!canvas||!MODULE_DATA) return;
   var sm = MODULE_DATA.filter(function(m){return m.score!=null;});
   if (sm.length<3) return;
   new Chart(canvas, {
@@ -1168,7 +1173,7 @@ function bDemandScores() {
 }
 function bDemandSignals() {
   var el = document.getElementById('demand-signals');
-  if (!el) return;
+  if (!el||!DEMAND_DATA) return;
   el.innerHTML = DEMAND_DATA.map(function(d){
     var c = sc(d.strength);
     return '<div style="display:flex;align-items:center;gap:8px;">'+
@@ -1180,12 +1185,12 @@ function bDemandSignals() {
 }
 function bDemandKeywords() {
   var el = document.getElementById('demand-keywords');
-  if (!el) return;
+  if (!el||!DEMAND_KEYWORD_DATA) return;
   el.innerHTML = DEMAND_KEYWORD_DATA.map(function(k){return '<span class="tag">'+k+'</span>';}).join('');
 }
 function bCompetitors() {
   var el = document.getElementById('competitor-list');
-  if (!el) return;
+  if (!el||!COMPETITOR_DATA) return;
   el.innerHTML = COMPETITOR_DATA.map(function(c){
     return '<div class="trow" style="flex-direction:column;gap:4px;">'+
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">'+
@@ -1198,7 +1203,7 @@ function bCompetitors() {
 }
 function bFeatures() {
   var el = document.getElementById('feature-list');
-  if (!el) return;
+  if (!el||!FEATURE_DATA) return;
   el.innerHTML = FEATURE_DATA.map(function(f){
     var c=sc(f.fit);
     return '<div style="display:flex;align-items:center;gap:8px;">'+
@@ -1309,7 +1314,7 @@ function bTechStack() {
 }
 function bReadiness() {
   var el = document.getElementById('tech-readiness');
-  if (!el) return;
+  if (!el||!READINESS_DATA) return;
   el.innerHTML = READINESS_DATA.map(function(r){
     var c = sc(r.score);
     return '<div style="display:flex;align-items:center;gap:8px;"><span style="font-size:11px;color:'+cv('--ink2')+';width:100px;flex-shrink:0;">'+r.dim+'</span>'+
@@ -1345,12 +1350,12 @@ function bEcon() {
 }
 function bLocalNuances() {
   var el = document.getElementById('local-nuances');
-  if (!el) return;
+  if (!el||!LOCAL_NUANCE_DATA) return;
   el.innerHTML = LOCAL_NUANCE_DATA.map(function(n){return '<span class="tag">'+n+'</span>';}).join('');
 }
 function bLocalCompetitors() {
   var el = document.getElementById('local-competitors');
-  if (!el) return;
+  if (!el||!LOCAL_COMPETITOR_DATA) return;
   el.innerHTML = LOCAL_COMPETITOR_DATA.map(function(c){return '<span class="tag">'+c+'</span>';}).join('');
 }
 function bA11y() {
@@ -1371,12 +1376,12 @@ function bComplianceFlags() {
 }
 function bComplianceNext() {
   var el = document.getElementById('compliance-next-steps');
-  if (!el) return;
+  if (!el||!COMPLIANCE_NEXT_DATA) return;
   el.innerHTML = COMPLIANCE_NEXT_DATA.map(function(n){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="arrow-right" style="width:11px;height:11px;color:var(--blue);flex-shrink:0;margin-top:2px;"></i>'+n+'</li>';}).join('');
 }
 function bExitAcquirers() {
   var el = document.getElementById('exit-acquirers');
-  if (!el) return;
+  if (!el||!EXIT_ACQUIRER_DATA) return;
   el.innerHTML = EXIT_ACQUIRER_DATA.map(function(a){return '<span class="tag">'+a+'</span>';}).join('');
 }
 function bOpsMetrics() {
@@ -1411,7 +1416,7 @@ function bEsgFlags() {
 }
 function bEsgRecs() {
   var el = document.getElementById('esg-recs');
-  if (!el) return;
+  if (!el||!ESG_REC_DATA) return;
   el.innerHTML = ESG_REC_DATA.map(function(r){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="check-circle" style="width:11px;height:11px;color:var(--green);flex-shrink:0;margin-top:2px;"></i>'+r+'</li>';}).join('');
 }
 function bFounderDims() {
@@ -1426,7 +1431,7 @@ function bFounderDims() {
 }
 function bOsRisks() {
   var el = document.getElementById('os-risks');
-  if (!el) return;
+  if (!el||!OS_RISK_DATA) return;
   el.innerHTML = OS_RISK_DATA.map(function(r){return '<li style="font-size:11px;color:var(--ink2);display:flex;gap:5px;"><i data-lucide="alert-triangle" style="width:11px;height:11px;color:var(--amber);flex-shrink:0;margin-top:2px;"></i>'+r+'</li>';}).join('');
 }
 function bPricingTiers() {
@@ -1440,12 +1445,12 @@ function bPricingTiers() {
 }
 function bFundraiseStrengths() {
   var el = document.getElementById('fundraise-strengths');
-  if (!el) return;
+  if (!el||!FUNDRAISE_STRENGTH_DATA) return;
   el.innerHTML = FUNDRAISE_STRENGTH_DATA.map(function(s){return '<li style="font-size:10px;color:var(--green);display:flex;gap:4px;"><i data-lucide="plus" style="width:10px;height:10px;flex-shrink:0;margin-top:2px;"></i>'+s+'</li>';}).join('');
 }
 function bFundraiseGaps() {
   var el = document.getElementById('fundraise-gaps');
-  if (!el) return;
+  if (!el||!FUNDRAISE_GAP_DATA) return;
   el.innerHTML = FUNDRAISE_GAP_DATA.map(function(g){return '<li style="font-size:10px;color:var(--rose);display:flex;gap:4px;"><i data-lucide="minus" style="width:10px;height:10px;flex-shrink:0;margin-top:2px;"></i>'+g+'</li>';}).join('');
 }
 
