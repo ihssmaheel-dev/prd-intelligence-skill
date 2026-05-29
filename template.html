@@ -359,6 +359,41 @@ h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
   background: linear-gradient(90deg, var(--blue) 0%, #7C3AED 50%, var(--blue) 100%);
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
 }
+
+/* Funnel chart */
+.funnel-vis { display:flex; flex-direction:column; align-items:center; margin-bottom:14px; }
+.funnel-tier { width:100%; padding:12px 14px; border-radius:10px; background:var(--surface2); border:1px solid var(--border); position:relative; transition:all 0.2s; }
+.funnel-tier:hover { border-color:var(--border-mid); box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+.funnel-tier.tam { background:linear-gradient(135deg,var(--blue-light),var(--surface)); border-left:3px solid var(--blue); }
+.funnel-tier.sam { width:85%; background:linear-gradient(135deg,var(--amber-light),var(--surface)); border-left:3px solid var(--amber); }
+.funnel-tier.som { width:70%; background:linear-gradient(135deg,var(--green-light),var(--surface)); border-left:3px solid var(--green); }
+.funnel-tier .f-hdr { display:flex; align-items:center; gap:5px; margin-bottom:3px; }
+.funnel-tier .f-hdr i { width:11px;height:11px;cursor:pointer;color:var(--ink3);transition:color 0.2s;flex-shrink:0; }
+.funnel-tier .f-hdr i:hover { color:var(--blue); }
+.funnel-tier .f-hdr .label { font-size:8px; }
+.funnel-val { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; display:block; margin:2px 0 1px; }
+.funnel-tier.tam .funnel-val { color:var(--blue); }
+.funnel-tier.sam .funnel-val { color:var(--amber); }
+.funnel-tier.som .funnel-val { color:var(--green); }
+.funnel-tier .f-desc { font-size:10px; color:var(--ink3); line-height:1.4; }
+.funnel-con { width:2px; height:10px; background:var(--border); position:relative; }
+.funnel-con::before, .funnel-con::after { content:''; position:absolute; left:50%; width:6px; height:6px; border:2px solid var(--border); border-left:0; border-bottom:0; transform:translateX(-50%) rotate(45deg); }
+.funnel-con::before { top:-3px; }
+.funnel-con::after { bottom:-3px; }
+
+/* Glossary tooltip */
+.glossary-tip {
+  position:fixed; z-index:9999;
+  max-width:280px; padding:10px 14px;
+  border-radius:8px; background:var(--ink); color:var(--bg);
+  font-size:12px; line-height:1.5;
+  box-shadow:0 8px 32px rgba(0,0,0,0.2);
+  pointer-events:none; opacity:0;
+  transition:opacity 0.15s ease;
+}
+.glossary-tip.visible { opacity:1; }
+.glossary-tip strong { display:block; font-family:'Syne',sans-serif; margin-bottom:2px; font-size:11px; letter-spacing:0.05em; }
+.dark-mode .glossary-tip { background:var(--surface2); color:var(--ink); border:1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -1154,14 +1189,18 @@ function bRadar() {
 function bMarketFunnel() {
   var el = document.getElementById('market-funnel');
   if (!el||!MARKET_FUNNEL_DATA) return;
-  var labels=['TAM','SAM','SOM'];
-  el.innerHTML = MARKET_FUNNEL_DATA.map(function(d,i){
-    return '<div class="trow" style="flex-direction:column;gap:5px;margin-left:'+(i*16)+'px;">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center;">'+
-      '<span class="label" style="color:'+(i===0?'var(--blue)':'')+';">'+labels[i]+'</span>'+
-      '<span style="font-family:\'JetBrains Mono\',monospace;font-size:'+(18-i*2)+'px;font-weight:700;color:var(--ink);">'+d.value+'</span></div>'+
-      '<p style="font-size:11px;color:var(--ink2);">'+d.desc+'</p></div>';
-  }).join('');
+  var tiers=[{cls:'tam',label:'TAM'},{cls:'sam',label:'SAM'},{cls:'som',label:'SOM'}];
+  var html='<div class="funnel-vis">';
+  MARKET_FUNNEL_DATA.forEach(function(d,i){
+    if (i>0) html+='<div class="funnel-con"></div>';
+    html+='<div class="funnel-tier '+tiers[i].cls+'" style="width:'+(100-i*15)+'%">'+
+      '<div class="f-hdr"><i data-lucide="info" data-glossary="'+tiers[i].label+'"></i>'+
+      '<span class="label">'+tiers[i].label+'</span></div>'+
+      '<span class="funnel-val">'+d.value+'</span>'+
+      '<p class="f-desc">'+d.desc+'</p></div>';
+  });
+  html+='</div>';
+  el.innerHTML = html;
 }
 function bDemandScores() {
   var el = document.getElementById('demand-scores');
@@ -1453,6 +1492,93 @@ function bFundraiseGaps() {
   if (!el||!FUNDRAISE_GAP_DATA) return;
   el.innerHTML = FUNDRAISE_GAP_DATA.map(function(g){return '<li style="font-size:10px;color:var(--rose);display:flex;gap:4px;"><i data-lucide="minus" style="width:10px;height:10px;flex-shrink:0;margin-top:2px;"></i>'+g+'</li>';}).join('');
 }
+
+// ===== GLOSSARY & INFO TOOLTIPS =====
+var GLOSSARY = {
+  'TAM':'Total Addressable Market — the total revenue opportunity if the product achieves 100% market share in its category.',
+  'SAM':'Serviceable Addressable Market — the portion of TAM reachable through the product\'s chosen channels and business model.',
+  'SOM':'Serviceable Obtainable Market — the realistic near-term revenue target given competition, resources, and growth constraints.',
+  'MOAT':'A sustainable competitive advantage that protects the business from copycats. Common sources: brand equity, network effects, data moats, IP/patents, scale economies, and high switching costs.',
+  'SWOT':'A strategic framework analysing internal Strengths and Weaknesses alongside external Opportunities and Threats.',
+  'GTM':'Go-to-Market strategy — the execution blueprint covering target segments, channels, pricing, positioning, and the sales motion.',
+  'CAC':'Customer Acquisition Cost — total sales and marketing spend divided by the number of new customers won in a given period.',
+  'LTV':'Lifetime Value — the total net profit a customer generates across their entire relationship with the business. A healthy LTV:CAC ratio is 3:1 or higher.',
+  'MVP':'Minimum Viable Product — the smallest feature set that solves the core problem for early adopters and validates the fundamental product hypothesis.',
+  'ESG':'Environmental, Social, and Governance — a tripartite framework for evaluating a company\'s sustainability practices, social impact, and ethical governance beyond financials.',
+  'A11y':'Accessibility (numeronym for a+11 letters+y) — designing products usable by people with disabilities including visual, auditory, motor, speech, and cognitive impairments.',
+  'DPDP Act':'Digital Personal Data Protection Act — India\'s comprehensive data privacy law governing collection, processing, storage, and cross-border transfer of personal data.',
+  'IT Act':'Information Technology Act, 2000 — India\'s primary legislation addressing cybercrime, electronic commerce, data protection, and intermediary liability.',
+  'CAGR':'Compound Annual Growth Rate — the smoothed annualised growth rate of revenue or users over a multi-year period, accounting for compounding.',
+  'MRR':'Monthly Recurring Revenue — predictable subscription revenue normalised to a monthly figure, a core SaaS metric.',
+  'ARPU':'Average Revenue Per User — total revenue divided by average user count; tracks per-customer monetisation efficiency.',
+  'DAU/MAU':'Daily Active Users divided by Monthly Active Users — a stickiness metric; values above 50% indicate strong daily engagement habits.',
+  'KPI':'Key Performance Indicator — a quantifiable metric used to track progress toward a specific business objective.',
+  'ARR':'Annual Recurring Revenue — the annualised value of active subscription contracts; the standard revenue metric for SaaS businesses.',
+  'Founder Fit':'Evaluates whether the founding team has the right combination of domain expertise, industry network, grit, and execution capability for this specific market.',
+  'Market Size':'Top-down market sizing estimating the revenue opportunity across three tiers: TAM (total market), SAM (addressable via chosen channels), and SOM (realistic capture).',
+  'Module Radar':'A polar spider chart overlaying scores from all 25 analysis dimensions for a bird\'s-eye view of relative strengths and blind spots.',
+  'Score Heatmap':'A colour-coded 5×5 grid of all module scores — green (strong, 75+), amber (moderate, 50–74), orange (weak, 25–49), red (critical, <25) — for instant visual triage.',
+  'Demand Signals':'Measures real-world buyer intent by analysing keyword search trends, community buzz, social mentions, and competitive positioning gaps.',
+  'Competitive':'Analyses direct and indirect competitors on feature parity, market positioning, threat level, and whitespace opportunities the product can exploit.',
+  'Personas':'Defined user archetypes combining demographic, behavioural, and psychographic attributes — used to guide product decisions and go-to-market messaging.',
+  'MVP Scope':'Maps the planned feature set against market needs, scoring each feature on market fit and prioritising into Core (ship first), Nice-to-have, and Future buckets.',
+  'Revenue Model':'Evaluates monetisation options — subscription, usage-based, marketplace commissions, advertising, freemium — and scores their strategic fit.',
+  'Pricing':'Assesses price elasticity, customer willingness-to-pay, optimal tiering structure, and competitive price positioning to recommend a pricing strategy.',
+  'Risk Register':'A structured catalogue of technical, market, operational, and regulatory risks, each with a severity rating and specific mitigation actions.',
+  'Moat':'Evaluates the depth of competitive defensibility by scoring each moat source (brand, network effects, data, IP, switching costs, scale) on its strength.',
+  'Tech Stack':'Evaluates technology choices across the full stack — frontend, backend, database, infrastructure — for complexity, scalability, and build timeline.',
+  'Readiness':'Assesses technical readiness across architecture maturity, CI/CD pipeline, testing coverage, infrastructure automation, and deployment confidence.',
+  'Open Source':'Evaluates the viability of an open-core or source-available model — community traction potential, licensing, governance model, and monetisation risks.',
+  'Operational Complexity':'Assesses the operational burden of running the business — support load, infrastructure costs, logistics complexity, and scaling bottlenecks.',
+  'Hiring Roadmap':'Critical hires mapped to timeline and priority, with an organisational structure analysis identifying the key gaps between current and target headcount.',
+  'Ecosystem':'Platform integration opportunities, API partnerships, marketplace distribution, and the strategic risks of platform dependency.',
+  'Unit Economics':'Bottom-up analysis of CAC, LTV, payback period, gross margins, and contribution margin to validate the business model\'s unit-level sustainability.',
+  'Localization':'Cultural adaptation needs, internationalisation (i18n) complexity, regional competitive landscape, and localisation requirements for target geographies.',
+  'Compliance':'Regulatory exposure analysis covering data privacy (DPDP Act), IT Act compliance, sector-specific regulations, and a compliance remediation roadmap.',
+  'Fundraise':'Investor readiness scorecard covering the ask amount, stage fit, key strengths for the pitch, critical gaps to address, and realistic fundraising timeline.',
+  'Exit':'Strategic exit analysis identifying likely acquirers (strategic and financial), the product\'s strategic value drivers, and a realistic exit horizon.',
+  'Build Decision':'The final synthesis of all 25 modules into a clear strategic recommendation: Go (proceed to build), No-Go (do not invest), or Pivot (change strategy).',
+  'SWOT Analysis':'A structured strategic planning tool evaluating internal Strengths and Weaknesses against external Opportunities and Threats.',
+  'GTM Phases':'The phased go-to-market rollout plan — typically spanning beta, launch, growth, and scale — with timelines, channels, and key milestones.',
+  'GTM Metrics':'The leading indicators tracked across GTM phases — conversion rates, pipeline velocity, CAC, activation rate, and channel efficiency.'
+};
+
+(function(){
+  var tip = document.createElement('div');
+  tip.className = 'glossary-tip';
+  document.body.appendChild(tip);
+
+  document.addEventListener('mouseover', function(e) {
+    var target = e.target.closest('[data-glossary]');
+    if (!target) { tip.classList.remove('visible'); return; }
+    var key = target.getAttribute('data-glossary');
+    var def = GLOSSARY[key];
+    if (!def) { tip.classList.remove('visible'); return; }
+    tip.innerHTML = '<strong>'+key+'</strong>'+def;
+    var rect = target.getBoundingClientRect();
+    var t = rect.bottom + 8;
+    var l = rect.left + (rect.width/2);
+    tip.style.left = Math.min(Math.max(l-140,8), window.innerWidth-288)+'px';
+    tip.style.top = t+'px';
+    tip.classList.add('visible');
+  });
+  document.addEventListener('mouseout', function(e) {
+    if (!e.target.closest('[data-glossary]')) tip.classList.remove('visible');
+  });
+})();
+
+(function addInfoIcons(){
+  var labels = document.querySelectorAll('.card-head .label');
+  labels.forEach(function(lbl) {
+    var key = lbl.textContent.trim();
+    if (!GLOSSARY[key]) return;
+    var icon = document.createElement('i');
+    icon.setAttribute('data-lucide','info');
+    icon.setAttribute('data-glossary',key);
+    icon.style.cssText = 'width:12px;height:12px;color:var(--ink3);cursor:pointer;flex-shrink:0;transition:color 0.2s;';
+    lbl.insertAdjacentElement('afterend', icon);
+  });
+})();
 
 // ===== INIT =====
 (function init(){
