@@ -61,6 +61,7 @@ Each module is a self-contained LLM call: **system prompt + PRD + schema → JSO
 | `WORKFLOW.md` | Step-by-step guide for running the analysis with any AI |
 | `INSTALL.md` | Platform-specific setup (opencode, Cursor, Claude, Copilot, generic) |
 | `template.html` | Self-contained HTML dashboard with 53 scalar + 36 JSON array placeholders |
+| `docs/DESIGN.md` | Design system spec (Linear-style editorial brutalism) for reuse in other projects |
 | `validate.cjs` | Node.js schema validator for all 29 data arrays |
 | `test_gen.ps1` | PowerShell script to generate test dashboards |
 | `integrations/`  | Pre-built config files for each platform |
