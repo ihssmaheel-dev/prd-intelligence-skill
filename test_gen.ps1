@@ -149,31 +149,31 @@ $DEMAND_DATA = @'
 
 $COMPETITOR_DATA = @'
 [
-  { "name":"Asana", "threat":"Medium", "fit":62, "pos":"General work management with broad team adoption.", "weakness":"Not purpose-built for operational exception management." },
-  { "name":"Monday.com", "threat":"Medium", "fit":66, "pos":"Flexible workflow OS for cross-functional teams.", "weakness":"Requires heavy config to become decision-ready." },
-  { "name":"ServiceNow", "threat":"Low", "fit":48, "pos":"Enterprise workflow and IT operations platform.", "weakness":"Too heavy and expensive for mid-market operators." },
-  { "name":"Notion + spreadsheets", "threat":"High", "fit":70, "pos":"Low-cost internal stack assembled by teams.", "weakness":"Creates visibility but not strong accountability." }
+  { "name":"Asana", "threat":"Medium", "marketFit":62, "positioning":"General work management with broad team adoption.", "weakness":"Not purpose-built for operational exception management." },
+  { "name":"Monday.com", "threat":"Medium", "marketFit":66, "positioning":"Flexible workflow OS for cross-functional teams.", "weakness":"Requires heavy config to become decision-ready." },
+  { "name":"ServiceNow", "threat":"Low", "marketFit":48, "positioning":"Enterprise workflow and IT operations platform.", "weakness":"Too heavy and expensive for mid-market operators." },
+  { "name":"Notion + spreadsheets", "threat":"High", "marketFit":70, "positioning":"Low-cost internal stack assembled by teams.", "weakness":"Creates visibility but not strong accountability." }
 ]
 '@
 
 $FEATURE_DATA = @'
 [
-  { "name":"Exception feed", "fit":91, "priority":"Core" },
-  { "name":"Capacity heatmap", "fit":87, "priority":"Core" },
-  { "name":"Weekly executive digest", "fit":82, "priority":"Core" },
-  { "name":"Slack intervention prompts", "fit":76, "priority":"Nice-to-have" },
-  { "name":"Workflow templates", "fit":68, "priority":"Nice-to-have" },
-  { "name":"Autonomous remediation", "fit":41, "priority":"Future" }
+  { "name":"Exception feed", "fitScore":91, "priority":"Core" },
+  { "name":"Capacity heatmap", "fitScore":87, "priority":"Core" },
+  { "name":"Weekly executive digest", "fitScore":82, "priority":"Core" },
+  { "name":"Slack intervention prompts", "fitScore":76, "priority":"Nice-to-have" },
+  { "name":"Workflow templates", "fitScore":68, "priority":"Nice-to-have" },
+  { "name":"Autonomous remediation", "fitScore":41, "priority":"Future" }
 ]
 '@
 
 $READINESS_DATA = @'
 [
-  { "dim":"Data availability", "score":72 },
-  { "dim":"Buyer urgency", "score":79 },
-  { "dim":"Category clarity", "score":58 },
-  { "dim":"Technical feasibility", "score":81 },
-  { "dim":"GTM readiness", "score":69 }
+  { "dimension":"Data availability", "score":72 },
+  { "dimension":"Buyer urgency", "score":79 },
+  { "dimension":"Category clarity", "score":58 },
+  { "dimension":"Technical feasibility", "score":81 },
+  { "dimension":"GTM readiness", "score":69 }
 ]
 '@
 
@@ -208,17 +208,17 @@ $SWOT_DATA = @'
 
 $PERSONA_DATA = @'
 [
-  { "name":"Riya Mehta", "role":"VP Operations", "pain":"Cannot see which team bottlenecks will derail monthly targets until too late.", "goal":"Create a single weekly operating view with fewer manual check-ins.", "tags":["Accountability","Forecasting","Cross-functional"] },
-  { "name":"Daniel Cruz", "role":"Head of Delivery", "pain":"Staffing and work allocation drift constantly across customer accounts.", "goal":"Balance capacity and intervene on high-risk workflows faster.", "tags":["Capacity","Escalations","Utilisation"] },
-  { "name":"Mina Shah", "role":"Founder", "pain":"The team looks busy but key commitments still slip.", "goal":"Build repeatable operating discipline before scaling headcount.", "tags":["Lean team","Growth","Decision speed"] }
+  { "name":"Riya Mehta", "role":"VP Operations", "painPoint":"Cannot see which team bottlenecks will derail monthly targets until too late.", "goal":"Create a single weekly operating view with fewer manual check-ins.", "tags":["Accountability","Forecasting","Cross-functional"] },
+  { "name":"Daniel Cruz", "role":"Head of Delivery", "painPoint":"Staffing and work allocation drift constantly across customer accounts.", "goal":"Balance capacity and intervene on high-risk workflows faster.", "tags":["Capacity","Escalations","Utilisation"] },
+  { "name":"Mina Shah", "role":"Founder", "painPoint":"The team looks busy but key commitments still slip.", "goal":"Build repeatable operating discipline before scaling headcount.", "tags":["Lean team","Growth","Decision speed"] }
 ]
 '@
 
 $GTM_DATA = @'
 [
-  { "phase":1, "title":"Founder-led design partners", "desc":"Close 5-8 mid-market teams with painful weekly ops rituals and build around their recurring exception patterns.", "timeline":"0-3 months", "channel":"Founder outbound" },
-  { "phase":2, "title":"Category proof through operator content", "desc":"Publish workflow breakdowns, scorecards, and operating reviews that make the product language feel obvious.", "timeline":"3-6 months", "channel":"Content + LinkedIn" },
-  { "phase":3, "title":"Repeatable sales motion", "desc":"Package ROI stories around fewer escalations, better utilisation, and faster leadership reporting.", "timeline":"6-12 months", "channel":"Targeted AE + partnerships" }
+  { "phase":1, "title":"Founder-led design partners", "description":"Close 5-8 mid-market teams with painful weekly ops rituals and build around their recurring exception patterns.", "timeline":"0-3 months", "channel":"Founder outbound" },
+  { "phase":2, "title":"Category proof through operator content", "description":"Publish workflow breakdowns, scorecards, and operating reviews that make the product language feel obvious.", "timeline":"3-6 months", "channel":"Content + LinkedIn" },
+  { "phase":3, "title":"Repeatable sales motion", "description":"Package ROI stories around fewer escalations, better utilisation, and faster leadership reporting.", "timeline":"6-12 months", "channel":"Targeted AE + partnerships" }
 ]
 '@
 
@@ -232,9 +232,9 @@ $GTM_METRIC_DATA = @'
 
 $MONETISATION_DATA = @'
 [
-  { "name":"Platform subscription", "fit":88, "desc":"Best fit for predictable team-based adoption with clear workflow coverage." },
-  { "name":"Per monitored workflow", "fit":79, "desc":"Aligns pricing to operational scope and expansion usage." },
-  { "name":"Outcome-based add-on", "fit":57, "desc":"Compelling later, but likely too complex for the first sales motion." }
+  { "name":"Platform subscription", "fit":88, "description":"Best fit for predictable team-based adoption with clear workflow coverage." },
+  { "name":"Per monitored workflow", "fit":79, "description":"Aligns pricing to operational scope and expansion usage." },
+  { "name":"Outcome-based add-on", "fit":57, "description":"Compelling later, but likely too complex for the first sales motion." }
 ]
 '@
 
@@ -248,26 +248,26 @@ $MONETISATION_METRIC_DATA = @'
 
 $RISK_DATA = @'
 [
-  { "name":"Integration friction", "level":"High", "desc":"Time-to-value drops if setup requires too much data cleanup or manual mapping.", "mit":"Ship opinionated integrations first and use guided onboarding with default workflow models." },
-  { "name":"Weak trust in recommendations", "level":"Medium", "desc":"Operators may ignore guidance if the model feels generic or unexplained.", "mit":"Show why each alert exists and tie it to concrete workflow evidence." },
-  { "name":"Category ambiguity", "level":"Medium", "desc":"Buyers may compare the product to dashboards, project tools, or automation platforms inconsistently.", "mit":"Lead with pains and business outcomes rather than category labels." }
+  { "name":"Integration friction", "level":"High", "description":"Time-to-value drops if setup requires too much data cleanup or manual mapping.", "mitigation":"Ship opinionated integrations first and use guided onboarding with default workflow models." },
+  { "name":"Weak trust in recommendations", "level":"Medium", "description":"Operators may ignore guidance if the model feels generic or unexplained.", "mitigation":"Show why each alert exists and tie it to concrete workflow evidence." },
+  { "name":"Category ambiguity", "level":"Medium", "description":"Buyers may compare the product to dashboards, project tools, or automation platforms inconsistently.", "mitigation":"Lead with pains and business outcomes rather than category labels." }
 ]
 '@
 
 $MOAT_DATA = @'
 [
-  { "name":"Workflow data network", "desc":"Cross-system workflow data can compound into richer exception models and benchmarks over time.", "strength":"Strong" },
-  { "name":"Operational playbooks", "desc":"Intervention patterns become more valuable as the team learns which actions unblock delivery risk fastest.", "strength":"Moderate" },
-  { "name":"Brand trust", "desc":"A strong operator-facing point of view can help, but it is still early and not durable yet.", "strength":"Weak" }
+  { "type":"Workflow data network", "description":"Cross-system workflow data can compound into richer exception models and benchmarks over time.", "strength":"Strong" },
+  { "type":"Operational playbooks", "description":"Intervention patterns become more valuable as the team learns which actions unblock delivery risk fastest.", "strength":"Moderate" },
+  { "type":"Brand trust", "description":"A strong operator-facing point of view can help, but it is still early and not durable yet.", "strength":"Weak" }
 ]
 '@
 
 $TECH_STACK_DATA = @'
 [
-  { "layer":"Frontend", "tech":"React + TypeScript", "desc":"Fast product iteration, strong component reuse." },
-  { "layer":"Backend", "tech":"Node.js + Fastify", "desc":"Simple API surface for integrations and auth." },
-  { "layer":"Data", "tech":"Postgres + Redis", "desc":"Reliable storage with caching for alerts and jobs." },
-  { "layer":"AI", "tech":"LLM + rule guards", "desc":"Narrative guidance with deterministic thresholds." }
+  { "layer":"Frontend", "tech":"React + TypeScript", "reason":"Fast product iteration, strong component reuse." },
+  { "layer":"Backend", "tech":"Node.js + Fastify", "reason":"Simple API surface for integrations and auth." },
+  { "layer":"Data", "tech":"Postgres + Redis", "reason":"Reliable storage with caching for alerts and jobs." },
+  { "layer":"AI", "tech":"LLM + rule guards", "reason":"Narrative guidance with deterministic thresholds." }
 ]
 '@
 
@@ -282,9 +282,9 @@ $HIRING_DATA = @'
 
 $ECOSYSTEM_DATA = @'
 [
-  { "platform":"Slack", "desc":"Critical for real-time exception alerts and team communication.", "priority":"Core" },
-  { "platform":"Jira / Asana", "desc":"Bi-directional sync for task tracking and status updates.", "priority":"Core" },
-  { "platform":"Salesforce", "desc":"Tying operational delivery to customer contract value.", "priority":"Nice-to-have" }
+  { "platform":"Slack", "value":"Critical for real-time exception alerts and team communication.", "priority":"Core" },
+  { "platform":"Jira / Asana", "value":"Bi-directional sync for task tracking and status updates.", "priority":"Core" },
+  { "platform":"Salesforce", "value":"Tying operational delivery to customer contract value.", "priority":"Nice-to-have" }
 ]
 '@
 
@@ -316,8 +316,8 @@ $A11Y_REC_DATA = @'
 
 $COMPLIANCE_FLAG_DATA = @'
 [
-  { "name":"Data Sovereignty", "level":"Medium", "desc":"Storing client workflow data requires local compliance in specific SEA regions." },
-  { "name":"AI Explainability", "level":"Low", "desc":"Transparency in how decisions are recommended for accountability." }
+  { "name":"Data Sovereignty", "severity":"Medium", "description":"Storing client workflow data requires local compliance in specific SEA regions." },
+  { "name":"AI Explainability", "severity":"Low", "description":"Transparency in how decisions are recommended for accountability." }
 ]
 '@
 

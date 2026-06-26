@@ -255,9 +255,9 @@ accordingly (25-45 range). Do not hallucinate team qualifications.
 ```json
 {
   "overallScore": 0,
-  "domainExpertise": "string",
-  "industryNetwork": "string",
-  "executionReadiness": "string",
+  "dimensions": [
+    { "name": "string", "score": 0, "description": "string" }
+  ],
   "criticalGap": "string"
 }
 ```
@@ -1050,6 +1050,7 @@ outcomes.
 ```json
 {
   "riskLevel": "High|Medium|Low",
+  "score": 0,
   "regulatoryFlags": [{ "name": "string", "severity": "High|Medium|Low", "description": "string" }],
   "nextSteps": ["string"]
 }

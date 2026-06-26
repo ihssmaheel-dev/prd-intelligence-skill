@@ -184,6 +184,7 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 | `{{LOCALIZATION_ADAPTATION}}` | localization.adaptationRequired |
 | `{{ACCESSIBILITY_SCORE}}` | accessibility.score |
 | `{{COMPLIANCE_RISK_LEVEL}}` | compliance.riskLevel |
+| `{{COMPLIANCE_SCORE}}` | compliance.score (auto-derived from riskLevel if missing) |
 | `{{EXIT_ATTRACTIVENESS}}` | exit.attractiveness |
 | `{{EXIT_STRATEGIC_VALUE}}` | exit.strategicValue |
 | `{{EXIT_TIMELINE}}` | exit.exitTimeline |
@@ -222,11 +223,16 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 | `{{BUILD_QUESTION}}` | executive.buildDecisionQuestion or "Should this move into a focused MVP?" | "Should this be validated before build?" | "Should this be built at all?" |
 | `{{BUILD_DECISION}}` | executive.buildDecision or fallback | fallback | fallback |
 
-**Build decision fallback:**
-- score ≥ 75 AND defensibility ≥ 60: "No, this does not look like a waste if you keep the MVP narrow around exception management."
+**Build decision fallback** (used by `gen_report.mjs` when `exec.buildDecision` is empty):
+- score ≥ 75 AND defensibility ≥ 60: "No, this does not look like a waste if you keep the MVP narrow around the core wedge."
 - score ≥ 50: "Maybe. The idea has enough signal to test with a small set of design partners first."
-- Has high risk: "Maybe. This is not an obvious waste, but {risk.name} can burn time if not addressed early."
+- Has top risk: "Maybe. This is not an obvious waste, but {risk.name} can burn time if not addressed early."
 - else: "Yes, this is likely to waste time and money if built as described right now."
+
+**Build question fallback** (used by `gen_report.mjs` when `exec.buildDecisionQuestion` is empty):
+- score ≥ 75: "Should this move into a focused MVP?"
+- score ≥ 50: "Should this be validated before build?"
+- else: "Should this be built at all?"
 
 **Build label fallback:**
 - score ≥ 75: "Proceed with narrow scope"
@@ -273,12 +279,12 @@ Process modules **in batches of 3** to stay within context limits. For each modu
 | `{{FUNDRAISE_STRENGTH_DATA}}` | `[string]` |
 | `{{FUNDRAISE_GAP_DATA}}` | `[string]` |
 
-**Score color mapping** (used by helper in template):
-- ≥ 75 → `#15803D`
-- ≥ 50 → `#B45309`
-- ≥ 25 → `#C2410C`
-- else → `#DC2626`
-- null → `#CBC8BF`
+**Score color mapping** (used by `sc()` helper in template):
+- ≥ 75 → `#15803D` (green)
+- ≥ 50 → `#B45309` (amber)
+- ≥ 25 → `#C2410C` (orange)
+- else → `#DC2626` (red)
+- null → `var(--ink4)` (placeholder gray)
 
 ### Step 7: Generate Strategic Suggestions
 

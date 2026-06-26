@@ -89,7 +89,7 @@ const moduleData = [
   { key: 'economics', label: 'Econ', icon: 'bar-chart-3', score: economics.unitEconomicsScore ?? null },
   { key: 'localization', label: 'Local', icon: 'globe', score: localization.marketFit ?? null },
   { key: 'accessibility', label: 'A11y', icon: 'accessibility', score: accessibility.score ?? null },
-  { key: 'compliance', label: 'Comply', icon: 'scale', score: compliance.score ?? null },
+  { key: 'compliance', label: 'Comply', icon: 'scale', score: compliance.score ?? (compliance.riskLevel === 'Low' ? 75 : compliance.riskLevel === 'Medium' ? 50 : null) },
   { key: 'esg', label: 'ESG', icon: 'leaf', score: esg.overallScore ?? null },
   { key: 'fundraising', label: 'Fundraise', icon: 'banknote', score: fundraising.readinessScore ?? null },
   { key: 'exit', label: 'Exit', icon: 'target', score: exit.attractiveness ?? null }
@@ -146,12 +146,9 @@ const opsMetricData = [
   { label: 'Logistics Rating', value: (ops.logisticsRating ?? '').toString() }
 ];
 
-const founderDimData = [
-  { dim: 'Domain Expertise', score: 38 },
-  { dim: 'Industry Network', score: 15 },
-  { dim: 'Execution Readiness', score: 20 },
-  { dim: 'Critical Gap', score: 5 }
-];
+const founderDimData = (founder.dimensions || []).map(function(d) {
+  return { dim: d.name, score: d.score };
+});
 
 // ===== PLACEHOLDER MAPPING — SCALARS =====
 const scalars = {
@@ -162,7 +159,7 @@ const scalars = {
   '{{REPORT_INDUSTRY}}': reportIndustry,
   '{{REPORT_GEOGRAPHY}}': reportGeography,
   '{{REPORT_DATE}}': reportDate,
-  '{{REPORT_SUCCESSFUL}}': '25',
+  '{{REPORT_SUCCESSFUL}}': (function(){ var n=0; Object.values(data).forEach(function(v){ if(v && typeof v === 'object' && v.overallScore != null) n++; }); return Math.max(n, 1).toString() })(),
   '{{EXECUTIVE_SUMMARY}}': exec.summary ?? '',
   '{{MARKET_KEY_TREND}}': market.keyTrend ?? '',
   '{{COMPETITOR_WHITESPACE}}': competitors.whiteSpace ?? '',
@@ -179,7 +176,7 @@ const scalars = {
   '{{LOCALIZATION_ADAPTATION}}': localization.adaptationRequired ?? '',
   '{{ACCESSIBILITY_SCORE}}': (accessibility.score ?? 0).toString(),
   '{{COMPLIANCE_RISK_LEVEL}}': compliance.riskLevel ?? '',
-  '{{COMPLIANCE_SCORE}}': (compliance.score ?? 0).toString(),
+  '{{COMPLIANCE_SCORE}}': (compliance.score ?? (compliance.riskLevel === 'Low' ? 75 : compliance.riskLevel === 'Medium' ? 50 : 25)).toString(),
   '{{EXIT_ATTRACTIVENESS}}': (exit.attractiveness ?? 0).toString(),
   '{{EXIT_STRATEGIC_VALUE}}': exit.strategicValue ?? '',
   '{{EXIT_TIMELINE}}': exit.exitTimeline ?? '',
@@ -242,6 +239,24 @@ if (score >= 75) {
   buildDecisionLabel = 'Do not build this yet';
 }
 
+// Build decision fallback text
+if (!exec.buildDecision) {
+  var topRisk = (risks.risks && risks.risks[0]) ? risks.risks[0].name : null;
+  if (score >= 75 && moat.defensibility >= 60) {
+    exec.buildDecision = 'No, this does not look like a waste if you keep the MVP narrow around the core wedge.';
+  } else if (score >= 50) {
+    exec.buildDecision = 'Maybe. The idea has enough signal to test with a small set of design partners first.';
+  } else if (topRisk) {
+    exec.buildDecision = 'Maybe. This is not an obvious waste, but ' + topRisk + ' can burn time if not addressed early.';
+  } else {
+    exec.buildDecision = 'Yes, this is likely to waste time and money if built as described right now.';
+  }
+}
+if (!exec.buildDecisionQuestion) {
+  exec.buildDecisionQuestion = score >= 75 ? 'Should this move into a focused MVP?' :
+    score >= 50 ? 'Should this be validated before build?' : 'Should this be built at all?';
+}
+
 Object.assign(scalars, {
   '{{VERDICT_BG}}': v.bg,
   '{{VERDICT_TEXT_COLOR}}': v.color,
@@ -251,8 +266,8 @@ Object.assign(scalars, {
   '{{BUILD_ICON_COLOR}}': buildIconColor,
   '{{BUILD_TEXT_COLOR}}': buildTextColor,
   '{{BUILD_BORDER_COLOR}}': buildBorderColor,
-  '{{BUILD_QUESTION}}': buildQuestion,
-  '{{BUILD_DECISION}}': exec.buildDecision ?? ''
+  '{{BUILD_QUESTION}}': exec.buildDecisionQuestion,
+  '{{BUILD_DECISION}}': exec.buildDecision
 });
 
 // ===== JS DATA ARRAYS =====
@@ -311,6 +326,12 @@ for (const [key, val] of Object.entries(scalars)) {
 
 for (const [key, val] of Object.entries(jsArrays)) {
   html = html.replaceAll(`{{${key}}}`, JSON.stringify(val, null, 2));
+}
+
+// Detect any remaining unsubstituted placeholders
+var remaining = html.match(/\{\{[A-Z_]+\}\}/g);
+if (remaining) {
+  console.warn('WARNING: ' + remaining.length + ' unsubstituted placeholder(s) found: ' + remaining.join(', '));
 }
 
 // ===== BUILD DATA JSON (merge with computed meta) =====
@@ -382,8 +403,15 @@ console.log(`File size: ${(html.length / 1024).toFixed(1)} KB`);
 // ===== OPEN BROWSER =====
 try {
   const reportPath = join(projectDir, 'index.html');
-  execSync(`start "" "${reportPath}"`, { timeout: 5000 });
+  var platform = process.platform;
+  if (platform === 'win32') {
+    execSync('start "" "' + reportPath + '"', { timeout: 5000 });
+  } else if (platform === 'darwin') {
+    execSync('open "' + reportPath + '"', { timeout: 5000 });
+  } else if (platform === 'linux') {
+    execSync('xdg-open "' + reportPath + '"', { timeout: 5000 });
+  }
   console.log('Browser opened.');
 } catch (e) {
-  // ignore — non-Windows or headless
+  // ignore — headless or no display
 }
