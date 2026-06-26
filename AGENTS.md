@@ -19,11 +19,14 @@ Default: industry = "General", geography = "Global".
 ### Files in This Repo
 
 | File | Use |
-|---|---|
+|---|---|---|
 | `PROMPTS.md` | All 25 system prompts + JSON schemas + score ladder + retry logic |
 | `WORKFLOW.md` | Detailed step-by-step process |
 | `template.html` | HTML dashboard with 37 scalar + 29 JS array placeholders |
 | `validate.cjs` | Node.js schema validator for data arrays (optional) |
+| `run_prd.mjs` | **Auto-execution engine** — runs all 25 modules against an LLM autonomously |
+| `lib/enrich.mjs` | Web enrichment engine — augments PRD with live market data |
+| `.env.example` | Config template (copy to `.env`) |
 
 ### High-Level Process
 
@@ -60,6 +63,27 @@ Save the completed report using versioned folder naming:
    - macOS: `open "reports/<project-name>/index.html"`
 
 Present a clean terminal summary (title, verdict, score, build decision, top modules, suggestions, file path).
+
+### Auto-Execution (run_prd.mjs)
+
+For automated analysis without manual prompting, use the auto-execution engine:
+
+```
+node run_prd.mjs "PRD content here" [--industry Fintech] [--geography US] [--enrich] [--out path/to/output]
+node run_prd.mjs --file path/to/prd.md [--industry Health] [--geography EU] [--enrich]
+```
+
+Requires `.env` config (copy from `.env.example`):
+- `PRD_LLM_PROVIDER` and `PRD_LLM_API_KEY` — LLM provider (openai/anthropic/gemini/custom)
+- `PRD_WEB_SEARCH_KEY` — (optional) Tavily/SerpAPI key for the `--enrich` flag
+
+The engine:
+1. Optionally enriches PRD with live web data (competitors, market trends, news)
+2. Parses PROMPTS.md for all 25 module prompts + schemas
+3. Runs Module 1 (Executive Summary) → checks stop conditions
+4. Runs Modules 2-25 in batches of 3 (parallel) with 3-attempt retry logic
+5. Applies score normalization and cross-module alignment
+6. Generates data.json and calls gen_report.mjs for the HTML dashboard
 
 ### Critical Rules
 

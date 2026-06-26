@@ -64,6 +64,9 @@ Each module is a self-contained LLM call: **system prompt + PRD + schema → JSO
 | `docs/DESIGN.md` | Design system spec (Linear-style editorial brutalism) for reuse in other projects |
 | `validate.cjs` | Node.js schema validator for all 29 data arrays |
 | `test_gen.ps1` | PowerShell script to generate test dashboards |
+| `run_prd.mjs` | **Auto-execution engine** — runs all 25 modules against an LLM autonomously |
+| `lib/enrich.mjs` | Web enrichment engine — augments PRD with live market data |
+| `.env.example` | Config template (copy to `.env`) |
 | `integrations/`  | Pre-built config files for each platform |
 | `reports/` | Generated report output directory (versioned naming) |
 
@@ -116,11 +119,30 @@ Detailed instructions: [`INSTALL.md`](./INSTALL.md)
 
 ---
 
+## Auto-Execution Engine
+
+Run the full 25-module analysis on autopilot with one command:
+
+```
+cp .env.example .env    # configure LLM provider + API key
+node run_prd.mjs "A B2B SaaS that helps customer success teams predict churn..." --enrich
+node run_prd.mjs --file path/to/prd.md --industry Fintech --geography US
+```
+
+Features:
+- **Provider-agnostic** — works with OpenAI, Anthropic, Gemini, or any OpenAI-compatible endpoint
+- **3-attempt retry** with repair prompts per module
+- **Score normalization** and cross-module alignment
+- **Web enrichment** (`--enrich`) — searches Tavily/SerpAPI for live market data
+- **Stop conditions** — early exit for weak or insufficient PRDs
+- Calls `gen_report.mjs` to produce the HTML dashboard automatically
+
 ## Requirements
 
-- **Any LLM** that can follow structured JSON output instructions
+- **Node.js 18+** (for `fetch` and ES modules)
+- **Any LLM API key** (OpenAI, Anthropic, or Gemini)
 - A browser to open the HTML dashboard
-- ~25 LLM calls per full analysis (2-5 minutes)
+- ~25 LLM calls per full analysis (2-5 minutes, ~£0.50-2.00 with GPT-4o)
 
 ---
 
